@@ -51,16 +51,19 @@ export const authOptions = {
             await connectDB();
             let existingUser = await User.findOne({ email: user.email })
             if (existingUser) {
+                console.log('check provider:::', account.provider);
                 user.id = existingUser._id;
+                existingUser.authProvider = account.provider;
+                existingUser.save();
             }
 
             if (account.provider === 'google') {
                 try {
-                    console.log('check profile:::', profile);
                     const user = await new User({
                         name: profile.name,
                         email: profile.email,
-                        password: profile.at_hash
+                        password: profile.at_hash,
+                        authProvider: account.provider
                     })
                     await user.save();
                 } catch (error) {
@@ -111,7 +114,21 @@ export const authOptions = {
         },
         async redirect({ url, baseUrl }) {
             return "/dashboard";
-        }
+        },
+
+        async jwt({ token, user }) {
+            if (user) {
+                token.userId = user.id;
+                token.email = user.email;
+            }
+            return token;
+        },
+
+        async session({ session, token }) {
+            session.user.userId = token.userId;
+            session.user.email = token.email;
+            return session;
+        },
     }
 
 }
