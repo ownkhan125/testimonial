@@ -93,6 +93,11 @@ button {
   text-transform: uppercase;
   background-color: #5d5dff;
   transition: all 0.2s linear;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #4b4acf;
 }
 
 .fit-content {
