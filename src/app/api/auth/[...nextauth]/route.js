@@ -51,7 +51,7 @@ export const authOptions = {
             await connectDB();
             let existingUser = await User.findOne({ email: user.email })
             if (existingUser) {
-                console.log('check provider:::', account.provider);
+                console.log('check provider:::', existingUser);
                 user.id = existingUser._id;
                 existingUser.authProvider = account.provider;
                 existingUser.save();

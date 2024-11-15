@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #dedede;
+  --background: #eaf0f5;
   --foreground: #171717;
 }
 
@@ -18,6 +18,49 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.ratio-16x9,
+.ratio-4x3,
+.ratio-4x2,
+.ratio-2x3,
+.ratio-21x9,
+.ratio-1x1-1,
+.ratio-1x1 {
+  width: 100%;
+  height: 0;
+}
+
+.ratio-16x9 {
+  padding-bottom: 56.25%;
+}
+
+.ratio-4x3 {
+  padding-bottom: 75%;
+}
+
+.ratio-3x2 {
+  padding-bottom: 66.66%;
+}
+
+.ratio-21x9 {
+  padding-bottom: 42.857%;
+}
+
+.ratio-1x1-1 {
+  padding-bottom: 110%;
+}
+
+.ratio-1x1 {
+  padding-bottom: 100%;
+}
+
+img {
+  height: auto;
+  width: auto;
+  max-width: 100%;
+  object-fit: cover;
 }
 
 h1,
@@ -102,4 +145,16 @@ button {
 
 .fit-content {
   width: fit-content !important;
+}
+
+
+
+
+
+
+
+/* sections  */
+
+.testimonial-card-section{
+  
 }
