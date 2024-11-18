@@ -1,38 +1,29 @@
 'use client'
 
 import Image from 'next/image';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FaFolderPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
 const page = () => {
 
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
+    const [product, setProduct] = useState();
+    // const [searchValue, setSearchValue] = useState("");
 
 
     const [image, setImage] = useState(null);
-    const fileInputRef = useRef(null);
-    const name = watch("name");
-    const img = watch("image");
-    const square = watch("square");
     const header = watch("header");
     const message = watch("message");
-
-
-    const handleDivClick = () => {
-
-        console.log("Ref Current Value:", fileInputRef.current);
-        // if (fileInputRef === null) {
-        fileInputRef.current.click();
-        // }
-    };
 
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const imageUrl = URL.createObjectURL(file);
+            console.log('check ', file);
+            setValue("image", imageUrl)
             setImage(imageUrl);
         }
     };
@@ -47,6 +38,9 @@ const page = () => {
                 body: JSON.stringify({ data })
             })
 
+            if (res.ok) {
+                fetchPosts()
+            }
         } catch (error) {
             console.log('dashboard page:', error);
         }
@@ -54,6 +48,18 @@ const page = () => {
         document.querySelector('.space-Modal').close()
         setImage(null)
     };
+
+
+
+    const fetchPosts = async () => {
+        const response = await fetch('/api/product');
+        const data = await response.json();
+        setProduct(data)
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
 
     return (
         <>
@@ -93,9 +99,9 @@ const page = () => {
                                     <div className="w-[250px] absolute top-[-15px] left-0 text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap text-green-600 bg-green-200 rounded-full py-1 px-3">
                                         Live preview - Testimonial page
                                     </div>
-                                    <div className='relative w-[80px] h-[80px] overflow-hidden mx-auto'>
+                                    <div className='relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2'>
                                         <Image
-                                            src={"https://testimonial.to/static/media/just-logo.040f4fd2.svg" || img}
+                                            src={image ? image : "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                             alt="your space"
                                             fill
                                         />
@@ -132,23 +138,22 @@ const page = () => {
 
                                             <div className="flex items-center gap-x-2 my-1">
                                                 <div
-                                                    className="w-[50px] h-[50px] bg-slate-200 rounded-full"
+                                                    className="w-[50px] min-w-[50px] h-[50px] bg-slate-200 rounded-full"
                                                     style={{ backgroundImage: image != null ? `url(${image})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}
-                                                    onClick={() => handleDivClick()}
                                                 ></div>
 
                                                 <input
                                                     type="file"
                                                     accept="image/*"
-                                                    ref={fileInputRef}
-                                                    // {...register('image')}
+                                                    {...register('image')}
                                                     style={{ display: 'none' }}
                                                     onChange={handleFileChange}
+                                                    id="image-input"
                                                 />
 
-                                                <div className="btn fit-content" onClick={() => handleDivClick()}>
+                                                <label htmlFor="image-input" className="btn fit-content">
                                                     <span>Change</span>
-                                                </div>
+                                                </label>
                                             </div>
 
 
@@ -181,17 +186,65 @@ const page = () => {
             </div>
 
 
-            <div className='testimonial-card-section'>
+            <div className='space-card-section'>
                 <div className='container-1'>
                     <div className='flex relative'>
-                        <input id="search" name="search" className="block w-full pl-10 pr-3 py-2 dark:text-white border border-gray-200 dark:border-gray-700 rounded-md leading-5 bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                            placeholder="Search testimonials by name, email, or keywords" type="search" value="" />
+                        <input
+                            id="search"
+                            name="search"
+                            className="block w-full pl-10 pr-3 py-2 dark:text-white border border-gray-200 dark:border-gray-700 rounded-md leading-5 bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+                            placeholder="Search testimonials by name, email, or keywords"
+                            type="search"
+                        // value={searchValue}
+                        // onChange={(e) => setSearchValue(e.target.value)} 
+                        />
                         <div className='absolute top-[50%] left-2 translate-y-[-50%] cursor-pointer'>
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
                             </svg>
                         </div>
                     </div>
+
+
+
+                    <div className='grid grid-cols-3 grid-flow-row gap-5  my-4'>
+                        {
+                            product?.map((item, index) => (
+                                <div key={index} className='space-card'>
+                                    <div className='flex items-center justify-between'>
+                                        <a href='#' className='flex items-center gap-x-2'>
+                                            <div className="w-[50px] relative min-w-[50px] h-[50px] overflow-hidden  rounded-full">
+                                                <Image
+                                                    src={item.image}
+                                                    alt="your space"
+                                                    fill
+                                                />
+                                            </div>
+
+                                            <span className='line-clamp-1'>
+                                                {item.name}
+                                            </span>
+                                        </a>
+
+                                        <div>
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+
+
+                                    <div className='flex items-center justify-between gap-x-2 p-2 mt-8'>
+                                        <span className='fs-14'>Videos: </span>
+                                        <span className='fs-14'>Text: </span>
+                                    </div>
+                                </div>
+
+                            ))
+                        }
+
+
+                    </div>  
                 </div>
             </div>
 

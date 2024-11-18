@@ -1,10 +1,10 @@
 import mongoose from 'mongoose'
 
 const ProductSchema = new mongoose.Schema({
-    // author: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'users'
-    // },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'users'
+    },
 
     name: {
         type: String,
@@ -24,6 +24,11 @@ const ProductSchema = new mongoose.Schema({
     square: {
         type: Boolean,
         required: true
+    },
+
+    image: {
+        type: String,
+        required: false
     },
 
     deletedAt: {

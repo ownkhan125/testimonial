@@ -87,6 +87,11 @@ p {
   font-weight: 400;
 }
 
+.fs-14{
+  font-size: 14px;
+  color: #707D86;
+}
+
 .container-1 {
   max-width: 1200px;
   margin: 0px auto;
@@ -155,6 +160,17 @@ button {
 
 /* sections  */
 
-.testimonial-card-section{
-  
+.space-card-section .space-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 5px;
+  border: 1px solid rgb(224, 223, 223);
+  background-color: white;
+  transition: all 0.2s linear;
+}
+
+.space-card-section .space-card:hover {
+  box-shadow: -1px 7px 12px -4px rgba(156, 156, 156, 0.75);
 }
