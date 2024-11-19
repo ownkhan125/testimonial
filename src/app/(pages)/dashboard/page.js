@@ -9,7 +9,7 @@ import { IoMdClose } from "react-icons/io";
 const page = () => {
 
     const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
-    const [product, setProduct] = useState();
+    const [product, setProduct] = useState([]);
     // const [searchValue, setSearchValue] = useState("");
 
 

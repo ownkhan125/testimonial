@@ -1,6 +1,7 @@
 
 import NextAuthProvider from '@/providers/NextAuthProvider';
 import '../style/globals.css'
+import Navbar from '@/components/Navbar';
 
 
 export const metadata = {
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <NextAuthProvider>
+          <Navbar />
           {children}
         </NextAuthProvider>
       </body>

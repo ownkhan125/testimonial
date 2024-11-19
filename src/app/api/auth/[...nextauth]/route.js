@@ -48,6 +48,7 @@ export const authOptions = {
 
     callbacks: {
         async signIn({ user, account, profile }) {
+            console.log('check profile', profile);
             await connectDB();
             let existingUser = await User.findOne({ email: user.email })
             if (existingUser) {
@@ -63,6 +64,7 @@ export const authOptions = {
                         name: profile.name,
                         email: profile.email,
                         password: profile.at_hash,
+                        image: profile.picture,
                         authProvider: account.provider
                     })
                     await user.save();

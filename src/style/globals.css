@@ -63,6 +63,15 @@ img {
   object-fit: cover;
 }
 
+.avatar{
+  width: 50px;
+  min-width: 50px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 100px;
+}
+
 h1,
 h2,
 h3 {
