@@ -1,45 +1,141 @@
-"use client";
-
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+// 'use client'
 
 
-const page = () => {
-  const { register, handleSubmit } = useForm();
-  const [preview, setPreview] = useState(null);
+// import React, { useState } from "react";
+// import DatePicker from "react-datepicker";
 
-  const handleFormSubmit = (formData) => {
-    // if user does not select an image, show error message and return
-    if (!formData?.image[0]) {
-      toast.error("Please select an image");
-      return;
-    }
+// import "react-datepicker/dist/react-datepicker.css";
 
-    const imageUrl = URL.createObjectURL(formData.image[0]);
-    setPreview(imageUrl);
-  };
+// // CSS Modules, react-datepicker-cssmodules.css
+// // import 'react-datepicker/dist/react-datepicker-cssmodules.css';
+//  const page = () => {
+//   const [startDate, setStartDate] = useState(new Date());
+//   return (
+//     <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} />
+//   );
+// };
 
-  return (
-    <div className="container mx-auto py-4">
-      <form className="d-flex  pb-3" onSubmit={handleSubmit(handleFormSubmit)}>
-        <input
-          type="file"
-          className="form-control rounded-0"
-          {...register("image")}
-        />
-        <button type="submit" className="btn btn-secondary rounded-0">
-          Submit
-        </button>
-      </form>
 
-      <div className="py-2">
-        <h4>Image preview</h4>
-        {preview && (
-          <img className="img rounded-2 mt-2" src={preview} alt="preview" />
-        )}
-      </div>
-    </div>
-  );
-};
+// export default page;
 
-export default page;
+
+// Import necessary dependencies and modules
+// import { connectDb } from "@/db/ConnectDb";
+// import userModel from "@/model/user.model";
+// import NextAuth from "next-auth";
+// import { MongoDBAdapter } from "@auth/mongodb-adapter";
+// import { clientPromise } from "./authAdapter";
+// import { clearStaleToken } from "./actions/clearStaleTokens";
+// import { authProviders } from "./authProviders";
+// import { handleCredentialSignIn } from "./actions/handleCredentialSignIn";
+// import { createOrUpdateUser } from "./actions/createOrUpdateUser";
+// import { generateDefaultUsername } from "./utils/generateDefaultUsername";
+// import { handleEmailOnlySignIn } from "./actions/handleEmailOnlySignIn";
+
+// // Define constants for reusability and easy configuration
+// const SESSION_MAX_AGE = 30 * 24 * 60 * 60; // 30 days in seconds
+
+// // Main configuration object for NextAuth
+// export const authOptions = {
+//   trustHost: true,
+//   adapter: MongoDBAdapter(clientPromise),
+//   secret: process.env.NEXTAUTH_SECRET,
+//   session: {
+//     strategy: "jwt",
+//     maxAge: SESSION_MAX_AGE,
+//   },
+//   pages: {
+//     signIn: "/auth/sign-in",
+//     verifyRequest: "/auth/auth-success",
+
+//     error: "/auth/auth-error",
+//   },
+//   providers: authProviders,
+//   callbacks: {
+//     async signIn({ user, account, profile }) {
+//       let result;
+
+//       await connectDb();
+//       const existingUser = await userModel.findOne({ email: user.email });
+
+//       try {
+//         switch (account.provider) {
+//           case "credentials":
+//             const authSignInResponse = await handleCredentialSignIn(
+//               user,
+//               existingUser
+//             );
+//             result = authSignInResponse;
+//             break;
+
+//           case "emailOnly":
+//             const authEmailResponse = await handleEmailOnlySignIn(
+//               user,
+//               existingUser
+//             );
+//             result = authEmailResponse;
+//             break;
+
+//           default:
+//             const authSocialResponse = await createOrUpdateUser(
+//               user.email,
+//               account.provider,
+//               profile,
+//               existingUser
+//             );
+//             result = authSocialResponse;
+//         }
+
+//         user.id = result._id;
+
+//         return true;
+//       } catch (error) {
+//         console.log(
+//           `${account.provider} - error : `.bgRed.white + error?.message
+//         );
+//         throw new Error(error?.message);
+//       }
+//     },
+//     async jwt({ token, user, account }) {
+//       if (user) {
+//         await clearStaleToken();
+//         token.id = user.id;
+//         token.provider = account?.provider;
+//       }
+//       return token;
+//     },
+//     async session({ session, token }) {
+//       session.user.userId = token.id;
+//       session.user.provider = token.provider;
+//       return session;
+//     },
+//   },
+//   events: {
+//     async signIn({ user, account, isNewUser }) {
+//       if (account.provider === "email" && isNewUser) {
+//         const updateData = {
+//           email: user.email,
+//           authProvider: "email",
+//           emailVerified: true,
+//           username: generateDefaultUsername(),
+//           profile: {
+//             avatar: null,
+//             firstName: null,
+//             lastName: null,
+//           },
+//           createdAt: new Date(),
+//         };
+
+//         await connectDb();
+//         await userModel.findOneAndUpdate({ email: user.email }, updateData, {
+//           upsert: true,
+//           new: true,
+//         });
+//       }
+//     },
+//   },
+// };
+
+// const handlers = NextAuth(authOptions);
+
+// export default handlers;

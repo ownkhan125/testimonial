@@ -17,6 +17,7 @@ export const POST = async (req) => {
         await user.save();
         return NextResponse.json(user, { status: 200 });
     } catch (error) {
+        console.log('signUp check', error?.message);
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

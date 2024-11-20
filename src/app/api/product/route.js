@@ -12,6 +12,7 @@ export const GET = async () => {
     try {
         await connectDB();
         const session = await getServerSession(authOptions);
+console.log('check session ::', session );
 
         if (!session) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

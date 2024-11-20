@@ -1,23 +1,17 @@
 'use client'
 
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
 import React from 'react'
 
 const Navbar = () => {
 
     const { data: session } = useSession();
-    console.log('check session ', session?.user?.image);
-
-
-    if (!session) {
-        return <p>User is not logged in.</p>;
-    }
 
     return (
         <>
             <section className='bg-white'>
-                <nav>
+                <nav >
                     <div className="container-1 mx-auto">
                         <div className='flex justify-between items-center'>
                             <div className='relative w-[180px] h-auto overflow-hidden'>
@@ -32,8 +26,8 @@ const Navbar = () => {
 
 
 
-                            <div >
-                                <button>
+                            <div>
+                                <button onClick={() => signOut()}>
                                     <div className='avatar bg-slate-500'>
                                         <Image
                                             src={session?.user?.image || "https://testimonial.to/static/media/logo-dark.8447f219.svg"}

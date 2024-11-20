@@ -48,33 +48,50 @@ export const authOptions = {
 
     callbacks: {
         async signIn({ user, account, profile }) {
-            console.log('check profile', profile);
+
             await connectDB();
             let existingUser = await User.findOne({ email: user.email })
-            if (existingUser) {
-                console.log('check provider:::', existingUser);
-                user.id = existingUser._id;
-                existingUser.authProvider = account.provider;
-                existingUser.save();
+            console.log('userr check ', user);
+            switch (account.provider) {
+                case 'google':
+                    let authId;
+                    if (existingUser) {
+                        existingUser.authProvider = "google";
+                        existingUser.image = profile.picture || existingUser.image;
+                        await existingUser.save();
+                        authId = existingUser._id
+                    }
+                    else {
+                        const newUser = new User({
+                            name: profile.name,
+                            email: profile.email,
+                            password: profile.at_hash,
+                            image: profile.picture,
+                            authProvider: "google",
+                        });
+                        await newUser.save();
+                        authId = newUser._id
+                    }
+
+                    user.id = authId
+                    break;
+
+                case "credentials":
+                    if (existingUser) {
+                        existingUser.authProvider = "credentials";
+                        existingUser.save()
+                    }
+                    break;
+
+                default:
+                    throw new Error("Unsupported provider.");
+
+
             }
 
-            if (account.provider === 'google') {
-                try {
-                    const user = await new User({
-                        name: profile.name,
-                        email: profile.email,
-                        password: profile.at_hash,
-                        image: profile.picture,
-                        authProvider: account.provider
-                    })
-                    await user.save();
-                } catch (error) {
-                    console.log(error.message);
-                }
-            }
-            const { email } = user;
+
             try {
-                await sendVerificationEmail(email, "own khan", "verify",
+                await sendVerificationEmail(user.email, "own khan", "verify",
                     `<div className="font-sans text-gray-800 max-w-lg mx-auto p-5 border border-gray-300 rounded-lg">
             <table role="presentation" className="w-full border-spacing-0">
         <tr>
@@ -114,9 +131,13 @@ export const authOptions = {
             }
             return existingUser === null ? "/auth/sign-in" : true;
         },
+
         async redirect({ url, baseUrl }) {
-            return "/dashboard";
-        },
+            if (url.startsWith("/")) return `${baseUrl}/dashboard`
+            else if (new URL(url).origin === baseUrl) return url
+            return baseUrl
+          },
+
 
         async jwt({ token, user }) {
             if (user) {

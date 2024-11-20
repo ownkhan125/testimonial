@@ -16,14 +16,14 @@ const UserSchema = new mongoose.Schema({
     },
     authProvider: {
         type: String,
-        default: null
+        default: null,
     },
 
     image: {
         type: String,
         required: false
     },
-  
+
 });
 
 export const User = mongoose.models.users || mongoose.model('users', UserSchema)
