@@ -1,5 +1,6 @@
 'use client'
 
+import { CldImage } from 'next-cloudinary';
 import Image from 'next/image';
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
@@ -18,17 +19,34 @@ const page = () => {
     const message = watch("message");
 
 
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            console.log('check ', file);
-            setValue("image", imageUrl)
-            setImage(imageUrl);
-        }
+    const handleUpload = async (e) => {
+        const file = e.target.files[0];
+        console.log('check call ', file);
+
+        // Convert the file to base64
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        });
+
+        // Send the base64 image to your backend
+        const response = await fetch("/api/upload", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image: base64 }),
+        });
+
+        const data = await response.json();
+        setImage(data.url);
+        setValue(data.url);
     };
 
+
     const onSubmit = async (data) => {
+        console.log('check the image', data);
         try {
             const res = await fetch('/api/product', {
                 method: 'POST',
@@ -101,9 +119,9 @@ const page = () => {
                                     </div>
                                     <div className='relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2'>
                                         <Image
-                                            src={image ? image : "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
+                                            src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                             alt="your space"
-                                            fill
+                                            fill={true}
                                         />
                                     </div>
                                     <h2 className='mb-2'>{header || 'Header goes here'}</h2>
@@ -147,7 +165,7 @@ const page = () => {
                                                     accept="image/*"
                                                     {...register('image')}
                                                     style={{ display: 'none' }}
-                                                    onChange={handleFileChange}
+                                                    onChange={handleUpload}
                                                     id="image-input"
                                                 />
 
@@ -216,9 +234,12 @@ const page = () => {
                                             <div className="w-[50px] relative min-w-[50px] h-[50px] overflow-hidden  rounded-full">
                                                 <Image
                                                     src={item.image}
+                                                    // onChange={handleUpload}
                                                     alt="your space"
                                                     fill
                                                 />
+
+
                                             </div>
 
                                             <span className='line-clamp-1'>

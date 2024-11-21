@@ -52,7 +52,7 @@ export const POST = async (req) => {
             square: data.square,
             header: data.header,
             message: data.message,
-            image: data.image
+            // image: data.image
         });
         await product.save();
 
