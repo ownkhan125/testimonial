@@ -12,7 +12,7 @@ export const GET = async () => {
     try {
         await connectDB();
         const session = await getServerSession(authOptions);
-console.log('check session ::', session );
+        console.log('check session ::', session);
 
         if (!session) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
@@ -33,6 +33,7 @@ export const POST = async (req) => {
         await connectDB();
 
         const { data } = await req.json();
+
         if (!data) {
             return NextResponse.json('user unAuthorized', { status: 401 })
         };
@@ -52,7 +53,7 @@ export const POST = async (req) => {
             square: data.square,
             header: data.header,
             message: data.message,
-            // image: data.image
+            image: data.image.url
         });
         await product.save();
 

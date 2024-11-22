@@ -24,8 +24,8 @@ export async function POST(req) {
         const uploadResponse = await cloudinary.uploader.upload(image, {
             folder: "nextjs_project",
         });
-        // console.log('check image ::', uploadResponse.secure_url);
-        
+        // console.log('check url ::', uploadResponse);
+
 
         return NextResponse.json({ url: uploadResponse.secure_url }, { status: 200 });
     } catch (error) {

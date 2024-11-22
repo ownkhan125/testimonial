@@ -1,8 +1,9 @@
 'use client'
 
-import { CldImage } from 'next-cloudinary';
+
+import Loader from '@/components/Loader';
 import Image from 'next/image';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FaFolderPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
@@ -11,6 +12,9 @@ const page = () => {
 
     const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
     const [product, setProduct] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [show, setShow] = useState(false);
+
     // const [searchValue, setSearchValue] = useState("");
 
 
@@ -19,9 +23,10 @@ const page = () => {
     const message = watch("message");
 
 
+
+
     const handleUpload = async (e) => {
         const file = e.target.files[0];
-        console.log('check call ', file);
 
         // Convert the file to base64
         const base64 = await new Promise((resolve) => {
@@ -29,25 +34,36 @@ const page = () => {
             reader.onload = () => resolve(reader.result);
             reader.readAsDataURL(file);
         });
+        setImage(base64)
+    };
 
-        // Send the base64 image to your backend
-        const response = await fetch("/api/upload", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ image: base64 }),
-        });
+    const uploadImage = async () => {
+        try {
+            const response = await fetch("/api/upload", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ image: image }),
+            });
 
-        const data = await response.json();
-        setImage(data.url);
-        setValue(data.url);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.log('uploadImage::', error?.message);
+        }
+
     };
 
 
     const onSubmit = async (data) => {
-        console.log('check the image', data);
         try {
+            setLoading(true);
+            if (data.image) {
+                const imageUrl = await uploadImage();
+                data.image = imageUrl;
+            }
+
             const res = await fetch('/api/product', {
                 method: 'POST',
                 headers: {
@@ -61,9 +77,12 @@ const page = () => {
             }
         } catch (error) {
             console.log('dashboard page:', error);
+        } finally {
+            setLoading(false);
         }
         reset();
         document.querySelector('.space-Modal').close()
+        document.body.classList.remove('fixed')
         setImage(null)
     };
 
@@ -98,7 +117,7 @@ const page = () => {
                         </div>
 
                         <div>
-                            <button className='btn fit-content' onClick={() => document.querySelector('.space-Modal').showModal()} >
+                            <button className='btn fit-content' onClick={() => { document.querySelector('.space-Modal').showModal(); document.body.classList.add('fixed') }} >
                                 Create a new Space
                             </button>
                         </div>
@@ -107,8 +126,11 @@ const page = () => {
 
 
 
-                        <dialog className='space-Modal max-w-[60%] w-[100%] absolute  rounded-md duration-150 p-8'>
-                            <button onClick={() => document.querySelector('.space-Modal').close()}
+                        <dialog className="space-Modal">
+                            <button onClick={() => {
+                                document.querySelector('.space-Modal').close()
+                                document.body.classList.remove('fixed')
+                            }}
                                 className="w-fit absolute top-2 right-3">
                                 <IoMdClose />
                             </button>
@@ -159,17 +181,16 @@ const page = () => {
                                                     className="w-[50px] min-w-[50px] h-[50px] bg-slate-200 rounded-full"
                                                     style={{ backgroundImage: image != null ? `url(${image})` : 'none', backgroundSize: 'cover', backgroundPosition: 'center' }}
                                                 ></div>
-
-                                                <input
-                                                    type="file"
-                                                    accept="image/*"
-                                                    {...register('image')}
-                                                    style={{ display: 'none' }}
-                                                    onChange={handleUpload}
-                                                    id="image-input"
-                                                />
-
                                                 <label htmlFor="image-input" className="btn fit-content">
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        {...register('image')}
+                                                        style={{ display: 'none' }}
+                                                        onChange={handleUpload}
+
+                                                        id="image-input"
+                                                    />
                                                     <span>Change</span>
                                                 </label>
                                             </div>
@@ -191,9 +212,12 @@ const page = () => {
                                                     className="flex-1 border p-2  w-full min-w-0 rounded-md text-gray-800  transition duration-150 ease-in-out
                                               sm:text-sm sm:leading-5 border-gray-300"></textarea>
                                             </div>
-
-
-                                            <button className='btn'>Create New Space</button>
+                                            <button
+                                                className="btn"
+                                                disabled={loading}
+                                            >
+                                                {loading ? <Loader /> : "Create New Space"}
+                                            </button>
                                         </form>
                                     </div>
                                 </div>
@@ -231,15 +255,13 @@ const page = () => {
                                 <div key={index} className='space-card'>
                                     <div className='flex items-center justify-between'>
                                         <a href='#' className='flex items-center gap-x-2'>
-                                            <div className="w-[50px] relative min-w-[50px] h-[50px] overflow-hidden  rounded-full">
+                                            <div className="avatar">
                                                 <Image
-                                                    src={item.image}
+                                                    src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                                     // onChange={handleUpload}
                                                     alt="your space"
                                                     fill
                                                 />
-
-
                                             </div>
 
                                             <span className='line-clamp-1'>

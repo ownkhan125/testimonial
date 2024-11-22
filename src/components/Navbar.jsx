@@ -28,9 +28,9 @@ const Navbar = () => {
 
                             <div>
                                 <button onClick={() => signOut()}>
-                                    <div className='avatar bg-slate-500'>
+                                    <div className='avatar'>
                                         <Image
-                                            src={session?.user?.image || "https://testimonial.to/static/media/logo-dark.8447f219.svg"}
+                                            src={session?.user?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                             alt="your space"
                                             width={180}
                                             height={0}
