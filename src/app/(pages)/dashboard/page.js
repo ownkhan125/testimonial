@@ -116,6 +116,7 @@ const page = () => {
                             <p>Create your first space to start collecting testimonials</p>
                         </div>
 
+
                         <div>
                             <button className='btn fit-content' onClick={() => { document.querySelector('.space-Modal').showModal(); document.body.classList.add('fixed') }} >
                                 Create a new Space
