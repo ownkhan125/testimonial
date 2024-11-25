@@ -132,10 +132,9 @@ export const authOptions = {
             return existingUser === null ? "/auth/sign-in" : true;
         },
 
-        async redirect({ url, baseUrl }) {
-            if (url.startsWith("/")) return `${baseUrl}/dashboard`
-            else if (new URL(url).origin === baseUrl) return url
-            return baseUrl
+        redirect: async ({ url, baseUrl }) => {
+            if (url.startsWith("/")) return `${baseUrl}/dashboard`; // Login redirect
+            return baseUrl; // Logout or other redirects go to the base URL
           },
 
 

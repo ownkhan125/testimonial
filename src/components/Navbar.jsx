@@ -2,11 +2,18 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
+import Dropdown from './Dropdown';
 
 const Navbar = () => {
-
+    const [show, setShow] = useState(false);
     const { data: session } = useSession();
+
+
+
+    const toggle = () => {
+        setShow(!show);
+    }
 
     return (
         <>
@@ -27,7 +34,7 @@ const Navbar = () => {
 
 
                             <div>
-                                <button onClick={() => signOut()}>
+                                <button className='relative' onClick={() => toggle()} >
                                     <div className='avatar'>
                                         <Image
                                             src={session?.user?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
@@ -36,6 +43,7 @@ const Navbar = () => {
                                             height={0}
                                         />
                                     </div>
+                                        <Dropdown main={show ? '' : 'hidden'} />
                                 </button>
                             </div>
                         </div>

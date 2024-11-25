@@ -47,6 +47,12 @@ export const POST = async (req) => {
         if (!user) {
             return NextResponse.json('user not found', { status: 404 })
         }
+
+        const existingProduct = await Product.findOne({name : data?.name , author : user._id});
+        if(existingProduct) {
+            return NextResponse.json('Product already exist', { status: 400 })
+        }
+
         const product = new Product({
             author: user._id,
             name: data.name,
