@@ -14,6 +14,7 @@ const ProductSchema = new mongoose.Schema({
 
     header: {
         type: String,
+        unique: true,
         required: true
     },
 

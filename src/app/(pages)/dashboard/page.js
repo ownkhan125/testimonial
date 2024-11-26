@@ -20,7 +20,7 @@ const page = () => {
     const header = watch("header");
     const message = watch("message");
     const name = watch("name", '');
-    const formattedName = name.replace(/ /g, '-');
+    const formattedName = name.replace(/ /g, / /g);
 
 
     const handleUpload = async (e) => {

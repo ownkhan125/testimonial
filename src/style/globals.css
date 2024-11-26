@@ -107,6 +107,13 @@ p {
   font-weight: 400;
 }
 
+
+.fs-18 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #25282c;
+}
+
 .fs-14 {
   font-size: 14px;
   color: #707D86;
@@ -153,6 +160,9 @@ button {
 }
 
 .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
@@ -167,6 +177,7 @@ button {
   background-color: #5d5dff;
   transition: all 0.2s linear;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .btn:hover {
@@ -185,6 +196,25 @@ button {
   transition-duration: 150ms;
   max-width: 70%;
   width: 100%;
+}
+
+
+.modal {
+  width: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px;
+  border-radius: 0.5rem;
+  text-align: left;
+  background-color: #ffffff;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  z-index: 99;
 }
 
 
@@ -226,4 +256,23 @@ button {
 
 .space-card-section .space-card:hover {
   box-shadow: 0px 6px 24px 0px #00000014;
+}
+
+
+
+
+
+
+@media (min-width: 640px) {
+
+  .modal {
+    padding: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    max-width: 28rem;
+    vertical-align: middle;
+  }
+
+
 }
