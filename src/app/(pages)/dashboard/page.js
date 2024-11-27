@@ -11,7 +11,7 @@ import { IoMdClose } from "react-icons/io";
 
 const page = () => {
 
-    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const { data: session } = useSession();

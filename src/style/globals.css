@@ -14,6 +14,7 @@
   }
 }
 
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -116,6 +117,7 @@ p {
 
 .fs-14 {
   font-size: 14px;
+  /* line-height: 10px; */
   color: #707D86;
 }
 
@@ -159,7 +161,8 @@ button {
   width: 100%;
 }
 
-.btn {
+.btn,
+.btn-transparent {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -172,17 +175,34 @@ button {
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 600;
-  color: #ffffff;
   text-transform: uppercase;
-  background-color: #5d5dff;
   transition: all 0.2s linear;
   cursor: pointer;
   overflow: hidden;
 }
 
+.btn {
+  background-color: #5d5dff;
+  color: #ffffff;
+}
+
+
 .btn:hover {
   background-color: #4b4acf;
 }
+
+
+.btn-transparent {
+  background-color: transparent;
+  color: #707D86;
+  border: 1px solid grey;
+}
+
+.btn-transparent:hover {
+  background-color: #ebf1f5;
+}
+
+
 
 .fit-content {
   width: fit-content !important;
