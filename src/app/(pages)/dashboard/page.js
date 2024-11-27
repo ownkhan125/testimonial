@@ -69,7 +69,6 @@ const page = () => {
                 },
                 body: JSON.stringify({ data })
             })
-
             if (res.ok) {
                 fetchPosts()
             }

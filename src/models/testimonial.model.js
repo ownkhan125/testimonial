@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
-const ProductSchema = new mongoose.Schema({
-    
+const testimonialSchema = new mongoose.Schema({
+
     name: {
         type: String,
         required: true
@@ -14,17 +14,30 @@ const ProductSchema = new mongoose.Schema({
 
     message: {
         type: String,
-        default: null,
-    },
-
-    square: {
-        type: Boolean,
-        required: true
+        required: true,
     },
 
     image: {
         type: String,
-        required: false
+        required: false,
+        default: null
+    },
+
+    photo: {
+        type: String,
+        required: false,
+        default: null
+    },
+
+    rating: {
+        type: String,
+        required: true
+    },
+
+    permission: {
+        type: Boolean,
+        required: true,
+        default: false,
     },
 
     deletedAt: {
@@ -35,4 +48,4 @@ const ProductSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export const Product = mongoose.models.products || mongoose.model('products', ProductSchema)
+export const Testimonial = mongoose.models.testimonials || mongoose.model('testimonials', testimonialSchema)

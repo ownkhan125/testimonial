@@ -1,6 +1,7 @@
 'use client'
 
 
+import Loader from '@/components/Loader';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { RatingStar } from 'rating-star';
@@ -17,8 +18,9 @@ const page = () => {
     const params = useParams();
     const [data, setData] = useState([]);
     const [show, setShow] = useState(false);
-    const [rating, setRating] = useState(null);
+    const [rating, setRating] = useState(5);
     const [image, setImage] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
     const name = params?.name;
 
@@ -31,17 +33,16 @@ const page = () => {
 
     const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
 
-    // const onSubmit = (formData) => {
-    //     console.log("Form Data:", { ...formData, rating });
-    // };
 
+    // Rating funtion 
     const onRatingChange = (newRating) => {
         setRating(newRating);
     };
 
 
+    // handle image  
 
-    const handleUpload = async (e) => {
+    const handleImage = async (e) => {
         const file = e.target.files[0];
 
         // Convert the file to base64
@@ -53,38 +54,56 @@ const page = () => {
         setImage(base64)
     };
 
-    const uploadImage = async () => {
+
+    // handle photo  
+    const handlePhoto = async (e) => {
+        const file = e.target.files[0];
+
+        // Convert the file to base64
+        const base64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(file);
+        });
+        setPhoto(base64)
+    };
+
+
+    // convert cloudinary link funtion 
+    const uploadImage = async (asset) => {
         try {
             const response = await fetch("/api/upload", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ image: image }),
+                body: JSON.stringify({ image: asset }),
             });
 
             const data = await response.json();
             return data;
         } catch (error) {
+            console.log('check function error');
             console.log('uploadImage::', error?.message);
         }
-
     };
 
 
+
+    // sendData backend funtion
     const onSubmit = async (data) => {
         try {
-            console.log('off check data::', data);
             setLoading(true);
             if (data.image) {
-                const imageUrl = await uploadImage();
+                const imageUrl = await uploadImage(image);
                 data.image = imageUrl;
             }
 
             if (data.photo) {
-                const imageUrl = await uploadImage();
+                const imageUrl = await uploadImage(photo);
                 data.photo = imageUrl;
             }
+            data.rating = rating;
 
             const res = await fetch('/api/testimonial', {
                 method: 'POST',
@@ -94,9 +113,6 @@ const page = () => {
                 body: JSON.stringify({ data })
             })
 
-            if (res.ok) {
-                fetchPosts()
-            }
         } catch (error) {
             console.log('dashboard page:', error);
         } finally {
@@ -105,6 +121,7 @@ const page = () => {
         reset();
         toggle()
         document.body.classList.remove('fixed')
+        setPhoto(null)
         setImage(null)
     };
 
@@ -214,11 +231,9 @@ const page = () => {
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    {...register("image", { required: "Image is required" })}
+                                    {...register("photo")}
+                                    onChange={handlePhoto}
                                 />
-                                {errors.image && (
-                                    <span className="text-red-500 text-sm">{errors.image.message}</span>
-                                )}
                             </div>
                         </div>
 
@@ -257,13 +272,13 @@ const page = () => {
                             <div className="flex items-center gap-3 my-2">
                                 <div className="avatar">
                                     <Image
-                                        src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
+                                        src={image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
                                         alt="user-profile"
                                         fill={true}
                                     />
                                 </div>
                                 <label>
-                                    <input type="file" accept="image/*" {...register("photo")} onChange={handleUpload} />
+                                    <input type="file" accept="image/*" {...register("image")} onChange={handleImage} />
                                 </label>
                             </div>
                         </div>
@@ -274,9 +289,7 @@ const page = () => {
                                 <input
                                     type="checkbox"
                                     id="permission-check"
-                                    {...register("permission", {
-                                        required: "Permission is required",
-                                    })}
+                                    {...register('permission')}
                                 />
                             </div>
                             <div>
@@ -287,16 +300,11 @@ const page = () => {
                                     I give permission to use this testimonial across social
                                     channels and other marketing efforts
                                 </label>
-                                {errors.permission && (
-                                    <span className="text-red-500 text-sm">
-                                        {errors.permission.message}
-                                    </span>
-                                )}
                             </div>
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex items-start justify-end gap-2 mt-4">
+                        <div className="flex items-stretch justify-end gap-2 mt-4">
                             <button
                                 type="button"
                                 className="btn-transparent fit-content"
@@ -305,7 +313,7 @@ const page = () => {
                                 Cancel
                             </button>
                             <button type="submit" className="btn fit-content">
-                                Send
+                                {loading ? <Loader /> : 'Send'}
                             </button>
                         </div>
                     </form>
