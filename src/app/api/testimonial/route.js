@@ -7,11 +7,8 @@ import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
     try {
-
         await connectDB();
-
         const { data } = await req.json();
-        console.log('check the data testimonial', data);
 
         const userTestimonial = new Testimonial({
             name: data.name,

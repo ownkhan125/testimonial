@@ -4,6 +4,7 @@
 import Loader from '@/components/Loader';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { FaFolderPlus } from "react-icons/fa";
@@ -257,7 +258,7 @@ const page = () => {
                                         product?.map((item, index) => (
                                             <div key={index} className='space-card'>
                                                 <div className='flex items-center justify-between'>
-                                                    <a href='' className='flex items-center gap-x-2'>
+                                                    <Link href={`/product/${item.name}`} className='flex items-center gap-x-2'>
                                                         <div className="avatar">
                                                             <Image
                                                                 src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
@@ -270,7 +271,7 @@ const page = () => {
                                                         <span className='line-clamp-1'>
                                                             {item.name}
                                                         </span>
-                                                    </a>
+                                                    </Link>
 
                                                     <div>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
