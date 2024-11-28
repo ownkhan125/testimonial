@@ -22,6 +22,7 @@ const page = () => {
     const message = watch("message");
     const name = watch("name", '');
     const formattedName = name.replace(/ /g, / /g);
+    const [publicUrl, setPublicUrl] = useState();
 
 
     const handleUpload = async (e) => {
@@ -86,15 +87,17 @@ const page = () => {
 
 
 
-    const fetchPosts = async () => {
-        const response = await fetch('/api/product');
-        const data = await response.json();
-        setProduct(data)
-    };
+
 
     useEffect(() => {
+        const fetchPosts = async () => {
+            const response = await fetch('/api/product');
+            const data = await response.json();
+            setProduct(data)
+        };
+        setPublicUrl(`${window.location.host}/${formattedName}`)
         fetchPosts();
-    }, []);
+    }, [formattedName]);
 
     return (
         <>
@@ -143,7 +146,8 @@ const page = () => {
                                             <Image
                                                 src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                                 alt="your space"
-                                                fill={true}
+                                                fill
+                                                sizes='100%'
                                             />
                                         </div>
                                         <h2 className='mb-2'>{header || 'Header goes here'}</h2>
@@ -167,7 +171,7 @@ const page = () => {
                                                     {errors.name && <p className="text-red-500">{errors.name.message}</p>}
                                                 </div>
                                                 <div className='mb-4 text-start'>
-                                                    <p className='fs-12'>Public Url: {window.location.host}/{formattedName} </p>
+                                                    <p className='fs-12'>Public Url: {publicUrl} </p>
                                                 </div>
 
                                                 <div className="flex items-center gap-x-1  mb-4 text-start">
@@ -191,7 +195,6 @@ const page = () => {
                                                             {...register('image')}
                                                             style={{ display: 'none' }}
                                                             onChange={handleUpload}
-
                                                             id="image-input"
                                                         />
                                                         <span>Change</span>
@@ -262,9 +265,9 @@ const page = () => {
                                                         <div className="avatar">
                                                             <Image
                                                                 src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                                                                // onChange={handleUpload}
                                                                 alt="your space"
                                                                 fill
+                                                                sizes='100%'
                                                             />
                                                         </div>
 

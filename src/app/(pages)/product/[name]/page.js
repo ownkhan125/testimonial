@@ -10,7 +10,9 @@ const page = () => {
     return (
         <>
 
-            <h1>own khan {params.name}</h1>
+            <div className='container-1'>
+                <h1>own khan {params.name}</h1>
+            </div>
         </>
     )
 }

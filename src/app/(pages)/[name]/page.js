@@ -126,18 +126,20 @@ const page = () => {
     };
 
 
-    const fetchData = async () => {
-        try {
-            const res = await fetch(`/api/product/${name}`)
-            const response = await res.json();
-            setData(response);
-        } catch (error) {
-            console.log(error);
-        }
-    }
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const res = await fetch(`/api/product/${name}`);
+                const response = await res.json();
+                setData(response);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
         fetchData();
-    }, [])
+    }, [name]);
+
 
 
 
@@ -150,7 +152,8 @@ const page = () => {
                         <Image
                             src={data.image}
                             alt="Product"
-                            fill={true}
+                            fill
+                            sizes='100%'
                         />
                     </div>
 
@@ -188,7 +191,11 @@ const page = () => {
                     <p className="fs-18">Write text testimonial to</p>
 
                     <div className="relative w-[40px] h-[40px] rounded-md overflow-hidden my-2">
-                        <Image src={data.image} alt="Product" fill={true} />
+                        <Image src={data.image || 'https://testimonial.to/static/media/logo-dark.8447f219.svg'}
+                         alt="Product"
+                          fill 
+                          sizes='100%'
+                          />
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -274,7 +281,8 @@ const page = () => {
                                     <Image
                                         src={image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
                                         alt="user-profile"
-                                        fill={true}
+                                        fill
+                                        sizes='100%'
                                     />
                                 </div>
                                 <label>
