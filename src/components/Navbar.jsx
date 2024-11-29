@@ -21,13 +21,12 @@ const Navbar = () => {
                 <nav >
                     <div className="container-1 mx-auto">
                         <div className='flex justify-between items-center'>
-                            <div className='relative w-[180px] h-[100px] overflow-hidden'>
+                            <div className=' w-[180px] overflow-hidden'>
                                 <Image
                                     src="https://testimonial.to/static/media/logo-dark.8447f219.svg"
                                     alt="your space"
-                                    fill
+                                    width={180}
                                     height={0}
-                                    sizes='100%'
                                     priority
                                 />
                             </div>
@@ -39,10 +38,10 @@ const Navbar = () => {
                                 <button className='relative' onClick={() => toggle()} >
                                     <div className='avatar'>
                                         <Image
-                                            src={session?.user?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                            src={session?.user?.image}
                                             alt="your space"
-                                            fill
                                             sizes='100%'
+                                            fill
                                         />
                                     </div>
                                     <Dropdown main={show ? '' : 'hidden'} />

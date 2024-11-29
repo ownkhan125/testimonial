@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 
 const ProductSchema = new mongoose.Schema({
     author: {
@@ -32,6 +32,13 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+
+    testimonials : [
+        {
+            type : Types.ObjectId,
+            ref : "testimonials"
+        }
+    ],
 
     deletedAt: {
         type: Date,

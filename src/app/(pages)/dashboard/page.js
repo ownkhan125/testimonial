@@ -21,7 +21,7 @@ const page = () => {
     const header = watch("header");
     const message = watch("message");
     const name = watch("name", '');
-    const formattedName = name.replace(/ /g, / /g);
+    const formattedName = name.replace(/ /g, '');
     const [publicUrl, setPublicUrl] = useState();
 
 
@@ -178,7 +178,7 @@ const page = () => {
                                                     <label className=" text-gray-700 text-sm select-none" htmlFor='square'>
                                                         Space Logo
                                                     </label>
-                                                    <input className=' border rounded-md p-2 ' type='checkbox' id='square' {...register("square")} />
+                                                    <input className='fit-content border rounded-md p-2 ' type='checkbox' id='square' {...register("square")} />
                                                     {errors.square && <p className="text-red-500">{errors.square.message}</p>}
                                                     <span>square?</span>
                                                 </div>
@@ -264,7 +264,7 @@ const page = () => {
                                                     <Link href={`/product/${item.name}`} className='flex items-center gap-x-2'>
                                                         <div className="avatar">
                                                             <Image
-                                                                src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                                src={item.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                                                 alt="your space"
                                                                 fill
                                                                 sizes='100%'
