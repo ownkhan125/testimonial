@@ -150,7 +150,7 @@ const page = () => {
                 <div className='max-w-3xl mx-auto text-center pb-6 md:pb-16'>
                     <div className='relative w-[100px] h-[100px] rounded-md overflow-hidden mx-auto my-2'>
                         {data?.image && <Image
-                            src={"https://global.discourse-cdn.com/turtlehead/original/2X/c/c830d1dee245de3c851f0f88b6c57c83c69f3ace.png"}
+                            src={data?.image}
                             alt="Product"
                             fill
                             sizes='100%'
@@ -191,8 +191,8 @@ const page = () => {
                     <p className="fs-18">Write text testimonial to</p>
 
                     <div className="relative w-[40px] h-[40px] rounded-md overflow-hidden my-2">
-                        <Image src={ 'https://testimonial.to/static/media/logo-dark.8447f219.svg'}
-                            alt="Product"
+                        <Image src={data?.image || 'https://testimonial.to/static/media/logo-dark.8447f219.svg'}
+                            alt="Testimonial logo"
                             fill
                             sizes='100%'
                         />
@@ -279,7 +279,7 @@ const page = () => {
                             <div className="flex items-center gap-3 my-2">
                                 <div className="avatar">
                                     <Image
-                                        src={ 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
+                                        src={image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
                                         alt="user-profile"
                                         fill
                                         sizes='100%'

@@ -22,7 +22,6 @@ export const GET = async (req, context) => {
 
         // Find product by name
         const result = await Product.findOne({ name: product });
-        console.log(result);
 
         if (!result) {
             return NextResponse.json('Not Found', { status: 404 });
@@ -61,6 +60,7 @@ export const POST = async (req, context) => {
             name: data.name,
             email: data.email,
             message: data.message,
+            photo: data.photo.url,
             image: data.image.url,
             rating: data.rating,
             permission: data.permission,

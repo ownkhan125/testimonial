@@ -145,7 +145,7 @@ const page = () => {
                                         <div className='relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2'>
                                             <Image
                                                 src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
-                                                alt="your space"
+                                                alt="simple space"
                                                 fill
                                                 sizes='100%'
                                             />
@@ -265,7 +265,7 @@ const page = () => {
                                                         <div className="avatar">
                                                             <Image
                                                                 src={item.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                                                                alt="your space"
+                                                                alt="simple"
                                                                 fill
                                                                 sizes='100%'
                                                             />

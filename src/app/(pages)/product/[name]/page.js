@@ -23,6 +23,7 @@ const page = () => {
                                     width={64}
                                     height={64}
                                     objectFit='contain'
+                                    priority
                                 />
                             </div>
                             <div>
