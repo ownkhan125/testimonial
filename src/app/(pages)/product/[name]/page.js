@@ -1,15 +1,50 @@
 'use client';
 
 
+import { Rating } from '@smastrom/react-rating';
+import moment from 'moment';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { RatingStar } from 'rating-star';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { MdDeleteOutline } from 'react-icons/md';
 
 const page = () => {
-
     const params = useParams();
+    const name = params?.name;
+    const [Product, setProduct] = useState();
+    const [Testimonial, setTestimonial] = useState();
+    const [Star, setStar] = useState();
+
+
+    useEffect(() => {
+        const fetchProduct = async () => {
+            try {
+                const res = await fetch(`/api/product/${name}`);
+                const response = await res.json();
+                setProduct(response);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        const fetchTestimonial = async () => {
+            try {
+                const res = await fetch(`/api/testimonials/${name}`);
+                const response = await res.json();
+                setTestimonial(response.testimonials);
+                setStar(response.testimonials.map(item => item.rating));
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        fetchProduct();
+        fetchTestimonial();
+
+    }, [name]);
+
+    console.log('check star', Star);
     return (
         <>
             <div className='product-hero-section'>
@@ -18,16 +53,15 @@ const page = () => {
                         <div className='flex  gap-x-3  items-center '>
                             <div className=' w-[64px] min-w-[64px] h-[64px] rounded-lg overflow-hidden'>
                                 <Image
-                                    src="https://res.cloudinary.com/drgqzs3ws/image/upload/v1732252582/nextjs_project/hu17cltfgzwwqu6ck92z.png"
+                                    src={Product?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                     alt='product'
                                     width={64}
                                     height={64}
-                                    objectFit='contain'
                                     priority
                                 />
                             </div>
                             <div>
-                                <h1>{params.name}</h1>
+                                <h1>{Product?.name}</h1>
                             </div>
                         </div>
 
@@ -133,100 +167,109 @@ const page = () => {
                                 </div>
                             </div>
 
-                            <div className='testimonial-card'>
-                                <div className='flex items-center justify-between'>
-                                    <div className='relative'>
-                                        <span className='px-5 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-600 text-left'>
-                                            Text
-                                        </span>
-                                        <span className='absolute -top-1 -left-2 bg-white rounded-full'>
-                                            <svg className="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                </path>
-                                            </svg>
-                                        </span>
-                                    </div>
+                            {
+                                Testimonial?.map((item, index) => (
+                                    <div key={index} className='testimonial-card'>
+                                        <div className='flex items-center justify-between'>
+                                            <div className='relative'>
+                                                <span className='px-5 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-blue-100 text-blue-600 text-left'>
+                                                    Text
+                                                </span>
+                                                <span className='absolute -top-1 -left-2 bg-white rounded-full'>
+                                                    <svg className="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z">
+                                                        </path>
+                                                    </svg>
+                                                </span>
+                                            </div>
 
-                                    <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-6 w-6 cursor-pointer text-purple-400 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-600">
-                                            <path fillRule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd">
-                                            </path>
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                <div className='fit-content '>
-                                    <RatingStar
-                                        maxScore={5}
-                                        noBorder={true}
-                                        id="rating"
-                                        rating={5}
-                                    // onRatingChange={onRatingChange}
-                                    // {...register("rating")}
-                                    />
-                                </div>
-
-                                <div>
-                                    <p className='fs-14'>this is testimonial for product</p>
-                                </div>
-
-
-                                <div className="img-wrapper">
-                                    <Image
-                                        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-                                        alt="Profile Image"
-                                        height={0}
-                                        width={100}
-                                        style={{ width: '100%', objectFit: 'cover' }}
-                                    />
-                                </div>
-
-
-                                <div className='grid md:grid-cols-2 gap-4 mt-4'>
-                                    <div>
-                                        <div>
-                                            <span className='fs-14'>Name</span>
+                                            <div>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" className="h-6 w-6 cursor-pointer text-purple-400 hover:text-purple-600 dark:text-purple-400 dark:hover:text-purple-600">
+                                                    <path fillRule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd">
+                                                    </path>
+                                                </svg>
+                                            </div>
                                         </div>
-                                        <div className='flex items-center gap-x-2'>
-                                            <div className='avatar'>
+
+                                        <div className="fit-content">
+                                            <RatingStar
+                                                maxScore={5}
+                                                noBorder={true}
+                                                id={`rating-${index}`}
+                                                rating={item.rating}
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <p className='fs-14'>this is testimonial for product :{item?.rating}</p>
+                                        </div>
+
+
+
+                                        <div className='grid grid-cols-4 gap-4'>
+                                            <div className="img-wrapper">
                                                 <Image
-                                                    src='https://lh3.googleusercontent.com/a/ACg8ocLZ8X9B66ozmNP50r5U2W_UYtV1RSK1ZlrxycYMU77cFscSEnN6=s96-c'
-                                                    alt='user-photo'
-                                                    fill
+                                                    src={item?.photo || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                    alt="Profile Image"
+                                                    height={0}
+                                                    width={180}
+                                                // style={{ width: '100%', objectFit: 'cover' }}
                                                 />
                                             </div>
-                                            <p> own</p>
+                                        </div>
+
+
+
+                                        <div className='grid md:grid-cols-2 gap-4 mt-4'>
+                                            <div>
+                                                <div>
+                                                    <span className='fs-14'>Name :</span>
+                                                </div>
+                                                <div className='flex items-center gap-x-2'>
+                                                    <div className='avatar'>
+                                                        <Image
+                                                            src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                            alt='user-photo'
+                                                            fill
+                                                        />
+                                                    </div>
+                                                    <p> {item?.name}</p>
+                                                </div>
+                                            </div>
+
+
+                                            <div>
+                                                <div>
+                                                    <span className='fs-14'>Email :</span>
+                                                </div>
+                                                <div>
+                                                    <p> {item?.email}</p>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div>
+                                                <div>
+                                                    <span className='fs-14'>Submitted At</span>
+                                                </div>
+                                                <div>
+                                                    <p>{moment(item.createdAt).format("MMM DD, YYYY, h:mm:ss A")}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className='text-end '>
+                                            <button className='btn-tranparent fit-content transition-all rounded-full p-1 hover:bg-slate-200'>
+                                                <MdDeleteOutline className='text-2xl text-red-500' />
+                                            </button>
                                         </div>
                                     </div>
+                                )
+                                )
+                            }
 
 
-                                    <div>
-                                        <div>
-                                            <span className='fs-14'>Email</span>
-                                        </div>
-                                        <div>
-                                            <p> own@gmail.com</p>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div>
-                                        <div>
-                                            <span className='fs-14'>Submitted At</span>
-                                        </div>
-                                        <div>
-                                            <p> date :: </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className='text-end '>
-                                    <button className='btn-tranparent fit-content transition-all rounded-full p-1 hover:bg-slate-200'>
-                                        <MdDeleteOutline className='text-2xl text-red-500' />
-                                    </button>
-                                </div>
-                            </div>
 
                         </div>
                     </div>

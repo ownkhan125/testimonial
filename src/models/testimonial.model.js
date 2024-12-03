@@ -30,7 +30,7 @@ const testimonialSchema = new mongoose.Schema({
     },
 
     rating: {
-        type: String,
+        type: Number,
         required: true
     },
 
