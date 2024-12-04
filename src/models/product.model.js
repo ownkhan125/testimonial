@@ -1,4 +1,5 @@
-import mongoose, { Types } from 'mongoose'
+import mongoose, { Types } from "mongoose";
+
 
 const ProductSchema = new mongoose.Schema({
     author: {
@@ -9,13 +10,14 @@ const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        set: (value) => value.trim(),
     },
 
     header: {
         type: String,
-        unique: true,
-        required: true
+        required: true,
+        set: (value) => value.trim(),
     },
 
     message: {
@@ -30,13 +32,14 @@ const ProductSchema = new mongoose.Schema({
 
     image: {
         type: String,
-        required: false
+        required: false,
+        set: (value) => value.trim(),
     },
 
-    testimonials : [
+    testimonials: [
         {
-            type : Types.ObjectId,
-            ref : "testimonials"
+            type: Types.ObjectId,
+            ref: "testimonials"
         }
     ],
 

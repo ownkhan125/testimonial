@@ -1,0 +1,22 @@
+responsive design fix height width
+    <Image
+      src={imageUrl} // <--- Crucial: This is the base image URL
+      alt="simple-space"
+      width={640}  // Provide explicit width and height
+      height={480} // Or use layout="fill" and sizes as shown below
+      layout="responsive" // or "fill" as you had
+      sizes="100vw"  // Adjust as needed
+    />
+  
+
+
+
+
+fill property background set 
+  <Image
+  src={imageUrl}
+  alt="simple-space"
+  layout="fill"
+  sizes="100vw"  //Important for "fill" layout
+  objectFit="cover" //Controls how the image fills the container
+/>

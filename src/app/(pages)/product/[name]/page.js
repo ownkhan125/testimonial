@@ -1,7 +1,7 @@
 'use client';
 
 
-import { Rating } from '@smastrom/react-rating';
+import DialogBox from '@/components/DialogBox';
 import moment from 'moment';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
@@ -12,9 +12,9 @@ import { MdDeleteOutline } from 'react-icons/md';
 const page = () => {
     const params = useParams();
     const name = params?.name;
-    const [Product, setProduct] = useState();
+    const [product, setProduct] = useState();
     const [Testimonial, setTestimonial] = useState();
-    const [Star, setStar] = useState();
+
 
 
     useEffect(() => {
@@ -33,7 +33,6 @@ const page = () => {
                 const res = await fetch(`/api/testimonials/${name}`);
                 const response = await res.json();
                 setTestimonial(response.testimonials);
-                setStar(response.testimonials.map(item => item.rating));
             } catch (error) {
                 console.log(error);
             }
@@ -44,16 +43,20 @@ const page = () => {
 
     }, [name]);
 
-    console.log('check star', Star);
+    console.log('check productt ::', name);
+
     return (
         <>
+
+
+            <DialogBox />
             <div className='product-hero-section'>
                 <div className='container-1'>
-                    <div className='flex items-center justify-between'>
-                        <div className='flex  gap-x-3  items-center '>
-                            <div className=' w-[64px] min-w-[64px] h-[64px] rounded-lg overflow-hidden'>
+                    <div className='flex items-center gap-x-2 justify-between'>
+                        <div className='flex gap-x-3 items-center'>
+                            <div className=' w-[64px] min-w-[64px] h-auto rounded-lg overflow-hidden'>
                                 <Image
-                                    src={Product?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                    src={product?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                     alt='product'
                                     width={64}
                                     height={64}
@@ -61,14 +64,18 @@ const page = () => {
                                 />
                             </div>
                             <div>
-                                <h1>{Product?.name}</h1>
+                                <h1>{product?.name}</h1>
                             </div>
                         </div>
 
 
 
                         <div>
-                            <button type="button" className="inline-flex items-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+                            <button
+                                type="button"
+                                className="inline-flex items-center rounded-md border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm  hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                                onClick={() => { document.querySelector('.space-Modal').showModal(); document.body.classList.add('modal-open') }}
+                            >
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="-ml-1 mr-2 h-5 w-5 text-gray-700">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125">
                                     </path>

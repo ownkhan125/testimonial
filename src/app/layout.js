@@ -14,6 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <NextAuthProvider>
+          <div className='body-overly'></div>
           <Navbar />
           {children}
         </NextAuthProvider>

@@ -16,13 +16,14 @@ import ReactStars from "react-rating-stars-component";
 
 const page = () => {
     const params = useParams();
+    const name = params?.name;
     const [data, setData] = useState([]);
     const [show, setShow] = useState(false);
     const [rating, setRating] = useState(5);
     const [image, setImage] = useState(null);
     const [photo, setPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
-    const name = params?.name;
+    
 
 
     const toggle = () => {
@@ -120,7 +121,7 @@ const page = () => {
         }
         reset();
         toggle()
-        document.body.classList.remove('fixed')
+        document.body.classList.remove('modal-open')
         setPhoto(null)
         setImage(null)
     };

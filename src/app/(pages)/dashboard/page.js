@@ -2,17 +2,18 @@
 
 
 import Loader from '@/components/Loader';
+import { useValidation } from '@/hooks/useValidation';
+import { spaceValidationSchema } from '@/utils/Validation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form';
 import { FaFolderPlus } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 
 const page = () => {
 
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, setValue, setError, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const { data: session } = useSession();
@@ -21,12 +22,20 @@ const page = () => {
     const header = watch("header");
     const message = watch("message");
     const name = watch("name", '');
-    const formattedName = name.replace(/ /g, '');
+    const formattedName = name.replace(/ /g, '-');
     const [publicUrl, setPublicUrl] = useState();
 
 
     const handleUpload = async (e) => {
         const file = e.target.files[0];
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError("image", {
+                type: "manual",
+                message: "Image size should be less than 5MB",
+            });
+            return;
+        }
 
         // Convert the file to base64
         const base64 = await new Promise((resolve) => {
@@ -47,8 +56,10 @@ const page = () => {
                 body: JSON.stringify({ image: image }),
             });
 
-            const data = await response.json();
-            return data;
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            }
         } catch (error) {
             console.log('uploadImage::', error?.message);
         }
@@ -61,8 +72,14 @@ const page = () => {
             setLoading(true);
             if (data.image) {
                 const imageUrl = await uploadImage();
+                if (!imageUrl) {
+                    // If image is heavy or upload fails, stop execution
+                    setLoading(false);
+                    return;
+                }
                 data.image = imageUrl;
             }
+
 
             const res = await fetch('/api/product', {
                 method: 'POST',
@@ -71,9 +88,9 @@ const page = () => {
                 },
                 body: JSON.stringify({ data })
             })
-            if (res.ok) {
-                fetchPosts()
-            }
+            // if (res.ok) {
+            //     fetchPosts()
+            // }
         } catch (error) {
             console.log('dashboard page:', error);
         } finally {
@@ -81,7 +98,7 @@ const page = () => {
         }
         reset();
         document.querySelector('.space-Modal').close()
-        document.body.classList.remove('fixed')
+        document.body.classList.remove('modal-open')
         setImage(null)
     };
 
@@ -91,11 +108,16 @@ const page = () => {
 
     useEffect(() => {
         const fetchPosts = async () => {
-            const response = await fetch('/api/product');
-            const data = await response.json();
-            setProduct(data)
+            try {
+                const response = await fetch('/api/product');
+                const data = await response.json();
+                setProduct(data);
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
         };
-        setPublicUrl(`${window.location.host}/${formattedName}`)
+
+        setPublicUrl(`${window.location.host}/${formattedName}`);
         fetchPosts();
     }, [formattedName]);
 
@@ -120,7 +142,7 @@ const page = () => {
 
 
                             <div>
-                                <button className='btn fit-content' onClick={() => { document.querySelector('.space-Modal').showModal(); document.body.classList.add('fixed') }} >
+                                <button className='btn fit-content' onClick={() => { document.querySelector('.space-Modal').showModal(); document.body.classList.add('modal-open') }} >
                                     Create a new Space
                                 </button>
                             </div>
@@ -132,7 +154,7 @@ const page = () => {
                             <dialog className="space-Modal">
                                 <button onClick={() => {
                                     document.querySelector('.space-Modal').close()
-                                    document.body.classList.remove('fixed')
+                                    document.body.classList.remove('modal-open')
                                 }}
                                     className="w-fit absolute top-2 right-3">
                                     <IoMdClose />
@@ -145,7 +167,7 @@ const page = () => {
                                         <div className='relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2'>
                                             <Image
                                                 src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
-                                                alt="simple space"
+                                                alt="simple-space"
                                                 fill
                                                 sizes='100%'
                                             />
@@ -167,8 +189,8 @@ const page = () => {
                                                     <label className="block text-gray-700 text-sm mb-1" >
                                                         Space Name
                                                     </label>
-                                                    <input required className='w-full border rounded-md p-2 ' type='text' placeholder='enter space name...' {...register("name")} />
-                                                    {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+                                                    <input className='w-full border rounded-md p-2 ' type='text' placeholder='enter space name...' {...register("name")} />
+                                                    {errors.name && <p className="error-message">{errors.name.message}</p>}
                                                 </div>
                                                 <div className='mb-4 text-start'>
                                                     <p className='fs-12'>Public Url: {publicUrl} </p>
@@ -179,7 +201,6 @@ const page = () => {
                                                         Space Logo
                                                     </label>
                                                     <input className='fit-content border rounded-md p-2 ' type='checkbox' id='square' {...register("square")} />
-                                                    {errors.square && <p className="text-red-500">{errors.square.message}</p>}
                                                     <span>square?</span>
                                                 </div>
 
@@ -199,6 +220,7 @@ const page = () => {
                                                         />
                                                         <span>Change</span>
                                                     </label>
+                                                    {errors.image && <p className="error-message">{errors.image.message}</p>}
                                                 </div>
 
 
@@ -206,8 +228,8 @@ const page = () => {
                                                     <label className="block text-gray-700 text-sm mb-1" >
                                                         Header Title
                                                     </label>
-                                                    <input required className='w-full border rounded-md p-2 ' type='text' placeholder='Would you like to give a shoutout for xyz?' {...register("header")} />
-                                                    {errors.header && <p className="text-red-500">{errors.header.message}</p>}
+                                                    <input className='w-full border rounded-md p-2 ' type='text' placeholder='Would you like to give a shoutout for xyz?' {...register("header")} />
+                                                    {errors.header && <p className="error-message">{errors.header.message}</p>}
                                                 </div>
 
 
@@ -264,10 +286,11 @@ const page = () => {
                                                     <Link href={`/product/${item.name}`} className='flex items-center gap-x-2'>
                                                         <div className="avatar">
                                                             <Image
-                                                                src={item.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                                src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                                                 alt="simple"
                                                                 fill
                                                                 sizes='100%'
+                                                                priority
                                                             />
                                                         </div>
 

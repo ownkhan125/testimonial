@@ -21,13 +21,23 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.fixed {
+.modal-open {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  filter: blur(3px);
+  bottom: 0;
+}
 
+.modal-open .body-overly {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  filter: blur(10px);
+  background-color: #707d8636;
+  inset: 0;
 }
 
 
@@ -98,6 +108,7 @@ h3 {
 p {
   font-size: 16px;
   font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 
@@ -116,6 +127,11 @@ p {
 .fs-12 {
   font-size: 12px;
   color: #707D86;
+}
+
+.error-message{
+  font-size: 14px;
+  color: #ab1717;
 }
 
 .container-1 {

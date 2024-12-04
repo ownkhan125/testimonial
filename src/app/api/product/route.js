@@ -12,12 +12,12 @@ export const GET = async () => {
     try {
         await connectDB();
         const session = await getServerSession(authOptions);
-        console.log('check session ::', session);
 
         if (!session) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
         const products = await Product.find({ author: session?.user?.userId }).populate("author");
+
 
         return NextResponse.json(products, { status: 200 });
     } catch (error) {
@@ -48,8 +48,8 @@ export const POST = async (req) => {
             return NextResponse.json('user not found', { status: 404 })
         }
 
-        const existingProduct = await Product.findOne({name : data?.name , author : user._id});
-        if(existingProduct) {
+        const existingProduct = await Product.findOne({ name: data?.name, author: user._id });
+        if (existingProduct) {
             return NextResponse.json('Product already exist', { status: 400 })
         }
 
@@ -69,3 +69,6 @@ export const POST = async (req) => {
         return NextResponse.json(error.message, { status: 500 })
     }
 }
+
+
+

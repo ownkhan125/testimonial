@@ -21,12 +21,15 @@ export async function POST(req) {
             return NextResponse.json({ error: "No image provided" }, { status: 400 });
         }
 
+        const maxSize = 5 * 1024 * 1024; // 5MB limit
+        if (Buffer.byteLength(image, 'base64') > maxSize) {
+            return NextResponse.json('heavyImage', { status: 400 });
+        }
+
         const uploadResponse = await cloudinary.uploader.upload(image, {
             folder: "nextjs_project",
         });
-        // console.log('check url ::', uploadResponse);
-
-
+        console.log('check image');
         return NextResponse.json({ url: uploadResponse.secure_url }, { status: 200 });
     } catch (error) {
         console.error("Upload Error:", error);

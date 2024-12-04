@@ -11,6 +11,7 @@ export const GET = async (req, context) => {
         // Connect to the database
         const params = await context.params;
         const product = params?.name;
+        const formattedProduct = product.trim().replace(/-/g, ' ');
 
         if (!product && !params) {
             return NextResponse.json("invalid params", { status: 400 });
@@ -22,7 +23,7 @@ export const GET = async (req, context) => {
         await connectDB();
 
         // Find product by name
-        const result = await Product.findOne({ name: product }).populate({
+        const result = await Product.findOne({ name: formattedProduct }).populate({
             path: 'testimonials', 
         });
 

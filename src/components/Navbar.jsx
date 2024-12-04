@@ -15,6 +15,7 @@ const Navbar = () => {
         setShow(!show);
     }
 
+
     return (
         <>
             <section className='bg-white'>
@@ -30,9 +31,6 @@ const Navbar = () => {
                                     priority
                                 />
                             </div>
-
-
-
 
                             <div>
                                 <button className='relative' onClick={() => toggle()} >
