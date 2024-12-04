@@ -124,7 +124,7 @@ const DialogBox = () => {
                         </div>
                         <div className="relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2">
                             <Image
-                                src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
+                                src={"https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                 alt="simple-space"
                                 fill
                                 sizes="100%"
