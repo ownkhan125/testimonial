@@ -43,7 +43,6 @@ const page = () => {
 
     }, [name]);
 
-    console.log('check productt ::', name);
 
     return (
         <>

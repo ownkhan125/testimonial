@@ -33,7 +33,7 @@ const ProductSchema = new mongoose.Schema({
     image: {
         type: String,
         required: false,
-        set: (value) => value.trim(),
+        default: null,
     },
 
     testimonials: [

@@ -4,16 +4,17 @@ import React, { useEffect, useState } from 'react';
 import Loader from './Loader';
 import { IoMdClose } from 'react-icons/io';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+
 
 const DialogBox = () => {
     const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
     const params = useParams();
+    const router = useRouter();
     const slugName = params?.name;
     const [loading, setLoading] = useState(false);
-    // const [image, setImage] = useState(null);
-    const image = watch('image');
+    const [image, setImage] = useState(null);
     const header = watch("header");
     const message = watch("message");
     const name = watch("name");
@@ -22,25 +23,27 @@ const DialogBox = () => {
     // Handle image upload and preview
     const handleUpload = async (e) => {
         const file = e.target.files[0];
+        const localUrl = URL.createObjectURL(file);
+        setImage(localUrl)
         const base64 = await new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result);
             reader.readAsDataURL(file);
         });
         // setImage(base64);
-        setValue("image", base64); // Update the form with the image
+        setValue("image", base64);
     };
 
 
 
-    const uploadImage = async (asset) => {
+    const uploadImage = async (img) => {
         try {
             const response = await fetch("/api/upload", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ image: asset }),
+                body: JSON.stringify({ image: img }),
             });
 
             const data = await response.json();
@@ -54,12 +57,17 @@ const DialogBox = () => {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-            setLoading(true);
-            if (data.image) {
-                const imageUrl = await uploadImage(image);
+            if (data.image && data.image.length > 0) {
+                const imageUrl = await uploadImage(data.image);
+                if (!imageUrl) {
+                    // If image is heavy or upload fails, stop execution
+                    setLoading(false);
+                    return;
+                }
                 data.image = imageUrl;
+            } else {
+                data.image = '';
             }
-
             const res = await fetch(`/api/product/${slugName}`, {
                 method: "PUT",
                 headers: {
@@ -67,6 +75,12 @@ const DialogBox = () => {
                 },
                 body: JSON.stringify({ data }),
             });
+            if (res.ok) {
+                const response = await res.json();
+                router.push(`${response.name}`)
+            } else {
+                alert('your new data is not secure')
+            }
 
 
         } catch (error) {
@@ -76,6 +90,7 @@ const DialogBox = () => {
             reset();
             document.querySelector('.space-Modal').close();
             document.body.classList.remove('modal-open');
+            setImage(null);
         }
     };
 
@@ -90,6 +105,7 @@ const DialogBox = () => {
                 setValue("header", response.header || '');
                 setValue("message", response.message || '');
                 setValue("image", response.image || null);
+                setImage(response.image || null);
             } catch (error) {
                 console.error('Error fetching product:', error);
             }
@@ -101,8 +117,9 @@ const DialogBox = () => {
 
 
     useEffect(() => {
-        setPublicUrl(`${window.location.host}/${name?.replace(/ /g, ' ')}`);
+        setPublicUrl(`${window.location.host}/${name?.replace(/ /g, '-')}`);
     }, [name]);
+
 
     return (
         <>
@@ -124,7 +141,7 @@ const DialogBox = () => {
                         </div>
                         <div className="relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2">
                             <Image
-                                src={"https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
+                                src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                 alt="simple-space"
                                 fill
                                 sizes="100%"

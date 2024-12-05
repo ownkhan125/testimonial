@@ -11,7 +11,7 @@ export const GET = async (req, context) => {
         // Connect to the database
         const params = await context.params;
         const product = params?.name;
-        const formattedProduct = product.trim().replace(/-/g, ' ');
+        const formattedProduct = product.replace(/-/g, ' ');
 
 
 
@@ -46,9 +46,9 @@ export const POST = async (req, context) => {
         // Access context.params synchronously
         const params = await context.params
         const spaceName = params?.name;
-        const formattedProduct = spaceName.trim().replace(/-/g, ' ');
+        const formattedProduct = spaceName.replace(/-/g, ' ');
 
-        if (!spaceName) {
+        if (!formattedProduct) {
             return NextResponse.json('invalid params', { status: 400 });
         }
 
@@ -64,8 +64,8 @@ export const POST = async (req, context) => {
             name: data.name,
             email: data.email,
             message: data.message,
-            photo: data.photo.url,
-            image: data.image.url,
+            photo: data?.photo,
+            image: data?.image,
             rating: data.rating,
             permission: data.permission,
         });
@@ -93,11 +93,12 @@ export const PUT = async (req, context) => {
 
         const params = await context.params;
         const previousName = params?.name;
-        const formattedName = previousName.trim().replace(/-/g, ' ');
+        const formattedName = previousName.replace(/-/g, ' ');
+
         await connectDB();
 
         const { data } = await req.json();
-
+        console.log('checkjec', data);
         if (!data) {
             return NextResponse.json('user unAuthorized', { status: 401 })
         };
@@ -116,20 +117,10 @@ export const PUT = async (req, context) => {
             return NextResponse.json('not found product', { status: 404 })
         }
 
-        const product = await Product.updateOne(
-            { name: data?.name, author: user._id },
-            {
-                author: user._id,
-                name: data.name,
-                square: data.square,
-                header: data.header,
-                message: data.message,
-                image: data.image.url,
-            }
-        );
+        const updateProduct = await Object.assign(existingProduct, data);
+        await updateProduct.save();
 
-
-        return NextResponse.json('successfull', { status: 200 })
+        return NextResponse.json(updateProduct, { status: 200 })
     } catch (error) {
         console.log('product PUT::', error?.message);
         return NextResponse.json(error.message, { status: 500 })

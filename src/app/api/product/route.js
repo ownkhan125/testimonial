@@ -33,7 +33,7 @@ export const POST = async (req) => {
         await connectDB();
 
         const { data } = await req.json();
-
+        console.log('check data image', data);
         if (!data) {
             return NextResponse.json('user unAuthorized', { status: 401 })
         };
@@ -56,10 +56,10 @@ export const POST = async (req) => {
         const product = new Product({
             author: user._id,
             name: data.name,
-            square: data.square,
+            square: data?.square,
             header: data.header,
-            message: data.message,
-            image: data.image.url
+            message: data?.message,
+            image: data?.image 
         });
         await product.save();
 
