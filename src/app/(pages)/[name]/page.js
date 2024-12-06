@@ -149,7 +149,7 @@ const page = () => {
         <>
             <div className='container-1'>
                 <div className='max-w-3xl mx-auto text-center pb-6 md:pb-16'>
-                    <div className='relative w-[100px] h-[100px] rounded-md overflow-hidden mx-auto my-2'>
+                    <div className='square-xl mx-auto my-2'>
                         {data?.image && <Image
                             src={data?.image}
                             alt="Product"
@@ -191,7 +191,7 @@ const page = () => {
 
                     <p className="fs-18">Write text testimonial to</p>
 
-                    <div className="relative w-[40px] h-[40px] rounded-md overflow-hidden my-2">
+                    <div className="square-sm my-2">
                         <Image src={data?.image || 'https://testimonial.to/static/media/logo-dark.8447f219.svg'}
                             alt="Testimonial logo"
                             fill

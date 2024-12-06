@@ -5,11 +5,12 @@ import Loader from './Loader';
 import { IoMdClose } from 'react-icons/io';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useValidation } from '@/hooks/useValidation';
+import { spaceValidationSchema } from '@/utils/Validation';
 
 
 const DialogBox = () => {
-    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useValidation(spaceValidationSchema);
     const params = useParams();
     const router = useRouter();
     const slugName = params?.name;
@@ -25,6 +26,15 @@ const DialogBox = () => {
         const file = e.target.files[0];
         const localUrl = URL.createObjectURL(file);
         setImage(localUrl)
+
+        if (file.size > 5 * 1024 * 1024) {
+            setError("image", {
+                type: "manual",
+                message: "Image size should be less than 5MB",
+            });
+            return;
+        }
+
         const base64 = await new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result);
@@ -45,9 +55,13 @@ const DialogBox = () => {
                 },
                 body: JSON.stringify({ image: img }),
             });
+            if (response.ok) {
+                const data = await response.json();
+                return data;
+            } else {
+                alert('something wrong Image')
+            }
 
-            const data = await response.json();
-            return data;
         } catch (error) {
             console.log('check function error');
             console.log('uploadImage::', error?.message);
@@ -139,7 +153,7 @@ const DialogBox = () => {
                         <div className="w-[250px] absolute top-[-15px] left-0 text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap text-green-600 bg-green-200 rounded-full py-1 px-3">
                             Live preview - Testimonial page
                         </div>
-                        <div className="relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2">
+                        <div className="square-lg mx-auto my-2">
                             <Image
                                 src={image || "https://testimonial.to/static/media/just-logo.040f4fd2.svg"}
                                 alt="simple-space"

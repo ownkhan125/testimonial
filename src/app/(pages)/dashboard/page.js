@@ -82,8 +82,9 @@ const page = () => {
                 } else {
                     data.image = imageUrl;
                 }
+            } else {
+                data.image = '';
             }
-            data.image = '';
             const res = await fetch('/api/product', {
                 method: 'POST',
                 headers: {

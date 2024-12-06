@@ -53,12 +53,11 @@ const page = () => {
                 <div className='container-1'>
                     <div className='flex items-center gap-x-2 justify-between'>
                         <div className='flex gap-x-3 items-center'>
-                            <div className=' w-[64px] min-w-[64px] h-auto rounded-lg overflow-hidden'>
+                            <div className='square-md'>
                                 <Image
                                     src={product?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                     alt='product'
-                                    width={64}
-                                    height={64}
+                                    fill
                                     priority
                                 />
                             </div>

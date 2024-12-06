@@ -129,7 +129,7 @@ p {
   color: #707D86;
 }
 
-.error-message{
+.error-message {
   font-size: 14px;
   color: #ab1717;
 }
@@ -158,6 +158,35 @@ p {
   border-radius: 100px;
   background-color: #dadada;
   border: 1px solid #a6a6a6;
+}
+
+.square-sm,
+.square-md,
+.square-lg,
+.square-xl {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.square-sm {
+  width: 40px;
+  height: 40px;
+}
+
+.square-md {
+  width: 64px;
+  height: 64px;
+}
+
+.square-lg {
+  width: 80px;
+  height: 80px;
+}
+
+.square-xl {
+  width: 100px;
+  height: 100px;
 }
 
 .form-sign {
