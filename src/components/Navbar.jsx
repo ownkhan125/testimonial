@@ -2,7 +2,7 @@
 
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Dropdown from './Dropdown';
 import Link from 'next/link';
 
@@ -15,11 +15,9 @@ const Navbar = () => {
     });
 
 
-
     const toggle = () => {
         setShow(!show);
     }
-
 
     return (
         <>
@@ -40,7 +38,7 @@ const Navbar = () => {
 
 
                             <div className='flex gap-x-3 items-center'>
-                                <div>
+                                <div className='hidden md:block'>
                                     <Link className='btn fit-content' href={'/dashboard'}>
                                         Dashboard
                                     </Link>

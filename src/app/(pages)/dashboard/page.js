@@ -282,42 +282,41 @@ const page = () => {
 
                             <div className='grid grid-cols-3 grid-flow-row gap-5  my-4'>
                                 {
-                                    session ?
-                                        product?.map((item, index) => (
-                                            <div key={index} className='space-card'>
-                                                <div className='flex items-center justify-between'>
-                                                    <Link href={`/product/${item.name.replace(/ /g, '-')}`} className='flex items-center gap-x-2'>
-                                                        <div className="avatar">
-                                                            <Image
-                                                                src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                                                                alt="simple"
-                                                                fill
-                                                                sizes='100%'
-                                                                priority
-                                                            />
-                                                        </div>
-
-                                                        <span className='line-clamp-1'>
-                                                            {item.name}
-                                                        </span>
-                                                    </Link>
-
-                                                    <div>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
-                                                        </svg>
+                                    session &&
+                                    product?.map((item, index) => (
+                                        <div key={index} className='space-card'>
+                                            <div className='flex items-center justify-between'>
+                                                <Link href={`/product/${item.name.replace(/ /g, '-')}`} className='flex items-center gap-x-2'>
+                                                    <div className="avatar">
+                                                        <Image
+                                                            src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                            alt="simple"
+                                                            fill
+                                                            sizes='100%'
+                                                            priority
+                                                        />
                                                     </div>
-                                                </div>
 
+                                                    <span className='line-clamp-1'>
+                                                        {item.name}
+                                                    </span>
+                                                </Link>
 
-                                                <div className='flex items-center justify-between gap-x-2 p-2 mt-8 border-t border-gray-200'>
-                                                    <span className='fs-14'>Videos: </span>
-                                                    <span className='fs-14'>Text: </span>
+                                                <div>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
+                                                    </svg>
                                                 </div>
                                             </div>
 
-                                        ))
-                                        : <button>quite</button>
+
+                                            <div className='p-2 mt-8 border-t border-gray-200'>
+                                                <span className='fs-14'>Testimonials :{item?.testimonials.length} </span>
+                                            </div>
+                                        </div>
+
+                                    ))
+
                                 }
 
 

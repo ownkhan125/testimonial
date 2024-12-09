@@ -51,46 +51,46 @@ export const authOptions = {
 
             await connectDB();
             let existingUser = await User.findOne({ email: user.email })
-            console.log('userr check ', user);
-            switch (account.provider) {
-                case 'google':
-                    let authId;
-                    if (existingUser) {
-                        existingUser.authProvider = "google";
-                        existingUser.image = profile.picture || existingUser.image;
-                        await existingUser.save();
-                        authId = existingUser._id
-                    }
-                    else {
-                        const newUser = new User({
-                            name: profile.name,
-                            email: profile.email,
-                            password: profile.at_hash,
-                            image: profile.picture,
-                            authProvider: "google",
-                        });
-                        await newUser.save();
-                        authId = newUser._id
-                    }
-
-                    user.id = authId
-                    break;
-
-                case "credentials":
-                    if (existingUser) {
-                        existingUser.authProvider = "credentials";
-                        existingUser.save()
-                    }
-                    break;
-
-                default:
-                    throw new Error("Unsupported provider.");
-
-
-            }
-
-
             try {
+                switch (account.provider) {
+                    case 'google':
+                        let authId;
+                        if (existingUser) {
+                            existingUser.authProvider = "google";
+                            existingUser.image = profile.picture || existingUser.image;
+                            await existingUser.save();
+                            authId = existingUser._id
+                        }
+                        else {
+                            const newUser = new User({
+                                name: profile.name,
+                                email: profile.email,
+                                password: profile.at_hash,
+                                image: profile.picture,
+                                authProvider: "google",
+                            });
+                            await newUser.save();
+                            authId = newUser._id
+                        }
+
+                        user.id = authId
+                        break;
+
+                    case "credentials":
+                        if (existingUser) {
+                            existingUser.authProvider = "credentials";
+                            existingUser.save()
+                        }
+                        break;
+
+                    default:
+                        throw new Error("Unsupported provider.");
+
+
+                }
+
+
+                // node mailer work , send email
                 await sendVerificationEmail(user.email, "own khan", "verify",
                     `<div className="font-sans text-gray-800 max-w-lg mx-auto p-5 border border-gray-300 rounded-lg">
             <table role="presentation" className="w-full border-spacing-0">
@@ -125,17 +125,15 @@ export const authOptions = {
         </tr>
        </table>
                     </div>`);
-                return true;
+
+
+                return existingUser ? true : '/api/auth/signin';
             } catch (error) {
                 console.error("Error sending verification email:", error);
             }
-            return existingUser === null ? "/auth/sign-in" : true;
         },
 
-        redirect: async ({ url, baseUrl }) => {
-            if (url.startsWith("/")) return `${baseUrl}/dashboard`; // Login redirect
-            return baseUrl; // Logout or other redirects go to the base URL
-          },
+
 
 
         async jwt({ token, user }) {

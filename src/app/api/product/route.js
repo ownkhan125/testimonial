@@ -21,7 +21,7 @@ export const GET = async () => {
 
         return NextResponse.json(products, { status: 200 });
     } catch (error) {
-        console.log('product Get::', error?.message);
+        console.log('product Get::', error?.message);   
         return NextResponse.json(error.message, { status: 500 })
     }
 }
@@ -63,7 +63,7 @@ export const POST = async (req) => {
         });
         await product.save();
 
-        return NextResponse.json('successfull', { status: 200 })
+        return NextResponse.json('successfull', { status: 200 })                                                                                                
     } catch (error) {
         console.log('product Post::', error?.message);
         return NextResponse.json(error.message, { status: 500 })
