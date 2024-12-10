@@ -27,3 +27,4 @@ export async function middleware(request) {
 export const config = {
     matcher: ["/", "/signup", "/dashboard/:path*"], // Apply middleware to these routes
 };
+

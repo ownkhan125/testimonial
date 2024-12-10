@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { FaVideo } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 import { MdEdit } from "react-icons/md";
-import ReactStars from "react-rating-stars-component";
+
 
 
 
@@ -23,7 +23,7 @@ const page = () => {
     const [image, setImage] = useState(null);
     const [photo, setPhoto] = useState(null);
     const [loading, setLoading] = useState(false);
-    
+
 
 
     const toggle = () => {
@@ -335,3 +335,4 @@ const page = () => {
 }
 
 export default page
+

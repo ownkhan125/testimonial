@@ -24,6 +24,8 @@ const page = () => {
     const name = watch("name");
     const formattedName = name?.replace(/ /g, '-');
     const [publicUrl, setPublicUrl] = useState();
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredItems, setFilteredItems] = useState(product);
 
 
     const handleUpload = async (e) => {
@@ -124,6 +126,21 @@ const page = () => {
         fetchPosts();
     }, [formattedName]);
 
+    // filter input 
+    useEffect(() => {
+        if (searchTerm === '') {
+            // If search term is empty, show all items
+            setFilteredItems(product);
+        } else {
+            // Filter items based on search term (case insensitive)
+            const filtered = product.filter(item =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredItems(filtered);
+        }
+        console.log('check ed');
+    }, [searchTerm, product]);
+
     return (
         <>
             <div className='hero-section'>
@@ -162,9 +179,9 @@ const page = () => {
                                     className="w-fit absolute top-2 right-3">
                                     <IoMdClose />
                                 </button>
-                                <div className="flex items-start justify-between">
-                                    <div className="w-[40%] relative flex flex-col p-4 border rounded-md">
-                                        <div className="w-[250px] absolute top-[-15px] left-0 text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap text-green-600 bg-green-200 rounded-full py-1 px-3">
+                                <div className="flex flex-col items-center lg:flex-row lg:items-start lg:justify-between">
+                                    <div className="w-full lg:w-[40%] relative flex flex-col p-2 border rounded-md">
+                                        <div className="live-preview-tag">
                                             Live preview - Testimonial page
                                         </div>
                                         <div className='relative w-[80px] h-[80px] rounded-md overflow-hidden mx-auto my-2'>
@@ -180,7 +197,7 @@ const page = () => {
                                     </div>
 
 
-                                    <div className="w-[60%] flex flex-col gap-4 px-3">
+                                    <div className="w-full lg:w-[60%] flex flex-col gap-4 px-3">
                                         <div>
                                             <h2 className='my-2'>Create a New Space</h2>
                                             <p className='my-2'>After the Space is created, it will generate a dedicated page for collecting testimonials.</p>
@@ -237,7 +254,7 @@ const page = () => {
 
 
 
-                                                <div className="mb-4 text-start">
+                                                <div className="mb-4 text-start text-sm lg:text-md">
                                                     <textarea id="message" name="message" rows="4" {...register("message")}
                                                         placeholder="Write a warm message to your customers, and give them simple directions on how to make the best testimonial."
                                                         className="flex-1 border p-2  w-full min-w-0 rounded-md text-gray-800  transition duration-150 ease-in-out
@@ -268,8 +285,8 @@ const page = () => {
                                     className="block w-full pl-10 pr-3 py-2 dark:text-white border border-gray-200 dark:border-gray-700 rounded-md leading-5 bg-white dark:bg-gray-800 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                                     placeholder="Search testimonials by name, email, or keywords"
                                     type="search"
-                                // value={searchValue}
-                                // onChange={(e) => setSearchValue(e.target.value)} 
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
                                 />
                                 <div className='absolute top-[50%] left-2 translate-y-[-50%] cursor-pointer'>
                                     <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -280,10 +297,10 @@ const page = () => {
 
 
 
-                            <div className='grid grid-cols-3 grid-flow-row gap-5  my-4'>
+                            <div className='grid sm:grid-cols-2 lg:grid-cols-3 grid-flow-row gap-5  my-4'>
                                 {
                                     session &&
-                                    product?.map((item, index) => (
+                                    filteredItems?.map((item, index) => (
                                         <div key={index} className='space-card'>
                                             <div className='flex items-center justify-between'>
                                                 <Link href={`/product/${item.name.replace(/ /g, '-')}`} className='flex items-center gap-x-2'>
@@ -310,7 +327,7 @@ const page = () => {
                                             </div>
 
 
-                                            <div className='p-2 mt-8 border-t border-gray-200'>
+                                            <div className='p-1 mt-3 lg:p-2 lg:mt-8 border-t border-gray-200'>
                                                 <span className='fs-14'>Testimonials :{item?.testimonials.length} </span>
                                             </div>
                                         </div>

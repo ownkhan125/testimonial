@@ -8,11 +8,7 @@ import Link from 'next/link';
 
 const Navbar = () => {
     const [show, setShow] = useState(false);
-    const { data: session } = useSession({
-        required: true,
-        // Refetch interval in seconds
-        refetchInterval: 0, // Disable automatic refetch
-    });
+    const { data: session } = useSession();
 
 
     const toggle = () => {
