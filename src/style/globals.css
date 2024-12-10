@@ -316,8 +316,8 @@ input {
   padding: 2rem;
   border-radius: 0.375rem;
   transition-duration: 150ms;
-  max-width: 70%;
   width: 100%;
+  max-width: 900px;
 }
 
 
@@ -482,8 +482,7 @@ input {
 
   .space-Modal {
     padding: 1.5rem;
-    max-width: 80%;
-    /* width: 100%; */
+    max-width: 650px;
   }
 
   input {

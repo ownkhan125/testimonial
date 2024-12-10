@@ -21,19 +21,21 @@ const Navbar = () => {
                 <nav >
                     <div className="container-1 mx-auto">
                         <div className='flex justify-between items-center'>
-                            <div className=' w-[180px] h-auto overflow-hidden'>
-                                <Image
-                                    src="https://testimonial.to/static/media/logo-dark.8447f219.svg"
-                                    alt="testimonial logo"
-                                    width={180}
-                                    height={0}
-                                    priority
-                                />
+                            <div className='max-w-[150px] h-auto overflow-hidden cursor-pointer'>
+                                <Link href={'/'}>
+                                    <Image
+                                        src="https://testimonial.to/static/media/logo-dark.8447f219.svg"
+                                        alt="testimonial logo"
+                                        width={0}
+                                        height={0}
+                                        priority
+                                    />
+                                </Link>
                             </div>
 
 
 
-                            <div className='flex gap-x-3 items-center'>
+                            <div className={`flex gap-x-3 items-center ${session ? '' : 'hidden'}`}>
                                 <div className='hidden md:block'>
                                     <Link className='btn fit-content' href={'/dashboard'}>
                                         Dashboard
@@ -51,6 +53,24 @@ const Navbar = () => {
                                     <Dropdown main={show ? '' : 'hidden'} />
                                 </button>
                             </div>
+
+
+
+                            <div className={`flex gap-x-3 items-center ${session ? 'hidden' : ''}`}>
+                                <div className='hidden md:block'>
+                                    <Link className='btn-transparent fit-content' href={'/api/auth/signin'}>
+                                        Sign In
+                                    </Link>
+                                </div>
+
+                                <div className='hidden md:block'>
+                                    <Link className='btn fit-content' href={'/signup'}>
+                                        Sign Up
+                                    </Link>
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </nav>

@@ -147,9 +147,9 @@ const DialogBox = () => {
                 >
                     <IoMdClose />
                 </button>
-                <div className="flex items-start justify-between">
+                <div className="flex flex-col items-center lg:flex-row lg:items-start lg:justify-between">
                     {/* Preview Section */}
-                    <div className="w-[40%] relative flex flex-col p-4 border rounded-md text-center">
+                    <div className="w-full lg:w-[40%] relative flex flex-col p-4 border rounded-md text-center">
                         <div className="w-[250px] absolute top-[-15px] left-0 text-sm font-semibold text-ellipsis overflow-hidden whitespace-nowrap text-green-600 bg-green-200 rounded-full py-1 px-3">
                             Live preview - Testimonial page
                         </div>
@@ -166,7 +166,7 @@ const DialogBox = () => {
                     </div>
 
                     {/* Form Section */}
-                    <div className="w-[60%] flex flex-col gap-4 px-3">
+                    <div className="w-full lg:w-[60%] flex flex-col gap-4 px-3">
                         <div>
                             <h2 className="my-2">Edit Space</h2>
                             <p className="my-2">Edit the space details and save your changes.</p>
@@ -194,7 +194,7 @@ const DialogBox = () => {
                                 </div>
 
                                 {/* Space Logo */}
-                                <div className="flex items-center gap-x-2 my-1">
+                                <div className="flex items-center gap-x-2 my-5">
                                     <div
                                         className="w-[50px] min-w-[50px] h-[50px] bg-slate-200 rounded-full"
                                         style={{
