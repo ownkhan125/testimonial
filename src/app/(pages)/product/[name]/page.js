@@ -174,7 +174,7 @@ const page = () => {
                                             <div className="absolute z-50 w-full bg-white rounded-lg p-2 shadow-md border mt-2">
                                                 <div className="flex flex-col gap-y-2">
                                                     {menuItems.map((item) => (
-                                                        <button key={item.label} className="btn-inbox-item active">
+                                                        <button key={item.label} className="btn-inbox-item">
                                                             {item.icon}
                                                             {item.label}
                                                         </button>
