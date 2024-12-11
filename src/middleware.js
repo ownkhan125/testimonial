@@ -3,28 +3,37 @@ import { NextResponse } from "next/server";
 
 export async function middleware(request) {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+    console.log("Token fetched in middleware:", token);
+
     const { pathname } = request.nextUrl;
-    console.log('check the token', token);
-    // Allow access to home and signup pages without session
-    if (!token && (pathname === "/" || pathname === "/signup")) {
-        return NextResponse.next(); // Continue request
+
+    if (!token) {
+        console.log("Token is undefined or null");
     }
 
-    // Redirect to home if trying to access protected route without session
+    // Allow public routes
+    if (!token && (pathname === "/" || pathname === "/signup")) {
+        console.log('1 side');
+        return NextResponse.next();
+    }
+
+    // Protected route check
     if (!token && pathname.startsWith("/dashboard")) {
+        console.log('2 side');
         return NextResponse.redirect(new URL("/", request.url));
     }
 
-    // Redirect logged-in user from home or signup to dashboard
+    // Redirect logged-in users away from signup
     if (token && pathname === "/signup") {
+        console.log('3 side');
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    // Allow other requests to continue
+    console.log('no condition');
     return NextResponse.next();
 }
 
 export const config = {
-    matcher: ["/", "/signup", "/dashboard/:path*"], // Apply middleware to these routes
+    matcher: ["/", "/signup", "/dashboard/:path*"],
 };
-
