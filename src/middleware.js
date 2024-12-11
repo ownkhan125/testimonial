@@ -12,8 +12,7 @@ export async function middleware(request) {
 
     // Redirect to home if trying to access protected route without session
     if (!token && pathname.startsWith("/dashboard")) {
-        // return NextResponse.redirect(new URL("/", request.url));
-        return NextResponse.next();
+        return NextResponse.redirect(new URL("/", request.url));
     }
 
     // Redirect logged-in user from home or signup to dashboard
