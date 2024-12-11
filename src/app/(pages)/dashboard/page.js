@@ -138,7 +138,6 @@ const page = () => {
             );
             setFilteredItems(filtered);
         }
-        console.log('check ed');
     }, [searchTerm, product]);
 
     return (

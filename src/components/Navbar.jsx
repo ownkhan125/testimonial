@@ -14,7 +14,7 @@ const Navbar = () => {
     const toggle = () => {
         setShow(!show);
     }
-    console.log('check session', session);
+
     return (
         <>
             <section className='bg-white'>

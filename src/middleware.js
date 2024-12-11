@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
     const { pathname } = request.nextUrl;
-
+    console.log('check the token', token);
     // Allow access to home and signup pages without session
     if (!token && (pathname === "/" || pathname === "/signup")) {
         return NextResponse.next(); // Continue request
@@ -12,7 +12,8 @@ export async function middleware(request) {
 
     // Redirect to home if trying to access protected route without session
     if (!token && pathname.startsWith("/dashboard")) {
-        return NextResponse.redirect(new URL("/", request.url));
+        // return NextResponse.redirect(new URL("/", request.url));
+        return NextResponse.next();
     }
 
     // Redirect logged-in user from home or signup to dashboard
