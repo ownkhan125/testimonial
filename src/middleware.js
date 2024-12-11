@@ -16,7 +16,7 @@ export async function middleware(request) {
     }
 
     // Redirect logged-in user from home or signup to dashboard
-    if (token && (pathname === "/" || pathname === "/signup")) {
+    if (token && pathname === "/signup") {
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
