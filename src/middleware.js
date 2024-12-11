@@ -1,36 +1,59 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
-export async function middleware(request) {
-    const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+// Delay function
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    console.log("Token fetched in middleware:", token);
+export async function middleware(request) {
+    let token = null;
+    let attempts = 0;
+    const maxAttempts = 5; // Retry 5 times
+    const delayTime = 1000; // 1 second delay
+
+    // Try fetching token with retry logic
+    while (!token && attempts < maxAttempts) {
+        token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+        if (token) {
+            break;
+        }
+
+        attempts += 1;
+        console.log(`Attempt ${attempts}: Token not found, retrying...`);
+
+        // Wait for a specified time before retrying
+        await delay(delayTime);
+    }
+
+    if (!token) {
+        console.log("Token not found after multiple attempts.");
+    } else {
+        console.log("Token found:", token);
+    }
 
     const { pathname } = request.nextUrl;
 
-    if (!token) {
-        console.log("Token is undefined or null");
-    }
-
     // Allow public routes
     if (!token && (pathname === "/" || pathname === "/signup")) {
-        console.log('1 side');
+        console.log('Allowing public route');
         return NextResponse.next();
     }
 
     // Protected route check
     if (!token && pathname.startsWith("/dashboard")) {
-        console.log('2 side');
+        console.log('Redirecting to home (no token)');
         return NextResponse.redirect(new URL("/", request.url));
     }
 
     // Redirect logged-in users away from signup
     if (token && pathname === "/signup") {
-        console.log('3 side');
+        console.log('Redirecting to dashboard (user logged in)');
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    console.log('no condition');
+    console.log('No condition matched, allowing route');
     return NextResponse.next();
 }
 
