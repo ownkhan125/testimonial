@@ -10,7 +10,7 @@ const page = () => {
   return (
     <>
       <div className='container-1'>
-        <h1>home page </h1>
+        <h1>home page {session}</h1>
       </div>
     </>
   )
