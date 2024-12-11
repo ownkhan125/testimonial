@@ -148,21 +148,21 @@ const page = () => {
 
         <>
             <div className='container-1'>
-                <div className='w-fit flex flex-col items-center gap-y-5 mx-auto p-3'>
+                <div className='max-w-[600px] flex flex-col items-center text-center gap-y-5 overflow-hidden mx-auto p-3'>
                     <div className='square-xl mx-auto my-2'>
-                        {data?.image && <Image
-                            src={data?.image}
+                        <Image
+                            src={data?.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
                             alt="Product"
                             fill
                             sizes='100%'
-                        />}
+                        />
                     </div>
 
-                    <div >
-                        <h1 className='text-[52px]'>{data.name}</h1>
+                    <div>
+                        <h1 className='text-[40px]'>{data.name}</h1>
                     </div>
 
-                    <div >
+                    <div>
                         <h2>{data.header}</h2>
                     </div>
 
@@ -192,7 +192,7 @@ const page = () => {
                     <p className="fs-18">Write text testimonial to</p>
 
                     <div className="square-sm my-2">
-                        <Image src={data?.image || 'https://testimonial.to/static/media/logo-dark.8447f219.svg'}
+                        <Image src={data?.image || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}
                             alt="Testimonial logo"
                             fill
                             sizes='100%'
