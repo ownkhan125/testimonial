@@ -4,8 +4,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { User } from "@/models/user.model";
 import { connectDB } from "@/connectDB/connectDB";
 import { sendVerificationEmail } from "@/utils/sendEmail";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { clientPromise } from "@/utils/mongoDB";
+
 
 
 export const authOptions = {
@@ -44,13 +43,8 @@ export const authOptions = {
         })
     ],
 
-    trustHost: true,
-    adapter: MongoDBAdapter(clientPromise),
     secret: process.env.NEXTAUTH_SECRET,
-    session: {
-        strategy: "jwt",
-        // maxAge: SESSION_MAX_AGE,
-    },
+
 
 
 
@@ -140,9 +134,6 @@ export const authOptions = {
                 console.error("Error sending verification email:", error);
             }
         },
-
-
-
 
         async jwt({ token, user }) {
             if (user) {
