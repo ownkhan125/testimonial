@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 
 export async function middleware(request) {
     const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
-    // const session = await getServerSession(authOptions);
-    // console.log("Token fetched in middleware:", session);
 
     const { pathname } = request.nextUrl;
 
@@ -38,5 +36,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: ["/", "/signup", "/dashboard/:path*"],
+    matcher: ["/", "/signup", "/dashboard/:path*", "/:path*"],
 };

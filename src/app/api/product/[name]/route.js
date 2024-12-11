@@ -19,8 +19,8 @@ export const GET = async (req, context) => {
             return NextResponse.json("invalid params", { status: 400 });
         };
 
-        const session = await getServerSession(authOptions);
-        if (!session) return NextResponse.json('successfull', { status: 404 });
+        // const session = await getServerSession(authOptions);
+        // if (!session) return NextResponse.json('successfull', { status: 404 });
 
         await connectDB();
 

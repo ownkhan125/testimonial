@@ -148,7 +148,7 @@ const page = () => {
 
         <>
             <div className='container-1'>
-                <div className='max-w-3xl mx-auto text-center pb-6 md:pb-16'>
+                <div className='w-fit flex flex-col items-center gap-y-5 mx-auto p-3'>
                     <div className='square-xl mx-auto my-2'>
                         {data?.image && <Image
                             src={data?.image}
@@ -158,15 +158,15 @@ const page = () => {
                         />}
                     </div>
 
-                    <div className='mb-3'>
+                    <div >
                         <h1 className='text-[52px]'>{data.name}</h1>
                     </div>
 
-                    <div className='mb-3'>
+                    <div >
                         <h2>{data.header}</h2>
                     </div>
 
-                    <div className='w-fit flex flex-wrap gap-3 items-center  mx-auto'>
+                    <div className='w-fit flex flex-wrap gap-3 items-center  mx-auto my-6'>
                         <button className='btn gap-x-2 fit-content'>
                             <FaVideo />
                             Record a Video
