@@ -15,23 +15,19 @@ export async function middleware(request) {
 
     // Allow public routes
     if (!token && (pathname === "/" || pathname === "/signup")) {
-        console.log('1 side');
         return NextResponse.next();
     }
 
     // Protected route check
     if (!token && pathname.startsWith("/dashboard")) {
-        console.log('2 side');
         return NextResponse.redirect(new URL("/", request.url));
     }
 
     // Redirect logged-in users away from signup
     if (token && pathname === "/signup") {
-        console.log('3 side');
         return NextResponse.redirect(new URL("/dashboard", request.url));
     }
 
-    console.log('no condition');
     return NextResponse.next();
 }
 

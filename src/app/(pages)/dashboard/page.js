@@ -326,13 +326,12 @@ const page = () => {
                                             </div>
 
 
-                                            <div className='p-1 mt-3 lg:p-2 lg:mt-8 border-t border-gray-200'>
+                                            <div className='p-1 mt-3 lg:p-2 lg:mt-6 border-t border-gray-200'>
                                                 <span className='fs-14'>Testimonials :{item?.testimonials.length} </span>
                                             </div>
                                         </div>
 
                                     ))
-
                                 }
 
 

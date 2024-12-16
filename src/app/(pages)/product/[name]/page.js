@@ -1,6 +1,7 @@
 'use client';
 
 
+import Deletemodal from '@/components/Deletemodal';
 import DialogBox from '@/components/DialogBox';
 import moment from 'moment';
 import Image from 'next/image';
@@ -15,6 +16,7 @@ const page = () => {
     const [product, setProduct] = useState();
     const [Testimonial, setTestimonial] = useState();
     const [isOpen, setIsOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const menuItems = [
         {
@@ -57,6 +59,11 @@ const page = () => {
         },
         // Add the remaining items similarly
     ];
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+        document.body.classList.toggle('modal-open');
+    }
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -133,7 +140,7 @@ const page = () => {
                         <div className='w-full lg:w-[30%]'>
                             <div className="h-[100%] p-4">
                                 {/* For larger screens */}
-                                <div className="hidden lg:block sticky top-10 bg-white rounded-lg p-2 shadow-md border">
+                                <div className="hidden lg:block sticky top-10 bg-white rounded-lg p-2 shadow-md border z-[-1]">
                                     <div className="text-font-medium">
                                         <span>Inbox</span>
                                     </div>
@@ -190,11 +197,11 @@ const page = () => {
 
                         <div className='w-full lg:w-[70%] text-center p-4'>
                             <div className='flex items-center gap-x-4'>
-                                <div className='relative w-[100%]'>
+                                <div className='relative w-[100%] z-[-1]'>
                                     <input
                                         id="search"
                                         name="search"
-                                        placeholder="Search testimonials by name, email, or keywords"
+                                        placeholder="Search testimonials by name, emailz, or keywords"
                                         type="search"
                                     // value={searchValue}
                                     // onChange={(e) => setSearchValue(e.target.value)} 
@@ -301,11 +308,24 @@ const page = () => {
                                         </div>
 
                                         <div className='text-end '>
-                                            <button className='btn-tranparent fit-content transition-all rounded-full p-1 hover:bg-slate-200'>
+                                            <button className='btn-tranparent fit-content transition-all rounded-full p-1 hover:bg-slate-200'
+                                                onClick={() =>
+                                                    toggleModal()
+
+                                                }>
                                                 <MdDeleteOutline className='text-2xl text-red-500' />
                                             </button>
+
                                         </div>
+                                        <Deletemodal
+                                            isOpen={isModalOpen}
+                                            toggle={toggleModal}
+                                            // onConfirm={handleDelete}
+                                            name={item?.name}
+                                        />
                                     </div>
+
+
                                 )
                                 )
                             }
