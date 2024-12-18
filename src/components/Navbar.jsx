@@ -8,12 +8,17 @@ import Link from 'next/link';
 
 const Navbar = () => {
     const [show, setShow] = useState(false);
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+
 
 
     const toggle = () => {
         setShow(!show);
     }
+
+
+
+
 
     return (
         <>
@@ -32,7 +37,6 @@ const Navbar = () => {
                                     />
                                 </Link>
                             </div>
-
 
 
                             <div className={`flex gap-x-3 items-center ${session ? '' : 'hidden'}`}>

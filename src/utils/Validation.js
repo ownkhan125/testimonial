@@ -4,18 +4,26 @@ import * as yup from "yup";
 export const spaceValidationSchema = yup.object().shape({
     name: yup.string().required("Space Name is required."),
     square: yup.boolean(),
-    // image: yup.mixed().test(
-    //     "fileValidation",
-    //     "Only JPEG/PNG images under 5MB are allowed",
-    //     (value) => {
-    //         console.log('check value ', value);
-    //         if (!value ) return false;
-    //         const file = value[0];
-    //         const isValidType = ["image/jpeg", "image/png"].includes(file.type);
-    //         const isValidSize = file.size <= 5 * 1024 * 1024;
-    //         return isValidType && isValidSize;
-    //     }
-    // ),
+    image: yup
+        .mixed()
+        .nullable()
+        .test(
+            "fileValidation",
+            "Only JPEG/PNG images under 5MB are allowed",
+            (value) => {
+                if (value == 'wrong-image') {
+                    return false;
+                }
+
+                if (value instanceof FileList || Array.isArray(value)) {
+                    return true;
+                }
+
+                return true;
+            }
+
+        ),
+
     header: yup.string().required("Header Title is required."),
 });
 

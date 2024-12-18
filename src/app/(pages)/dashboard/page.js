@@ -13,7 +13,7 @@ import { IoMdClose } from "react-icons/io";
 
 const page = () => {
 
-    const { register, handleSubmit, setValue, setError, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
+    const { register, handleSubmit, setValue, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
@@ -27,16 +27,12 @@ const page = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredItems, setFilteredItems] = useState(product);
 
-
     const handleUpload = async (e) => {
         const file = e.target.files[0];
         const localUrl = URL.createObjectURL(file);
         setImage(localUrl)
         if (file.size > 5 * 1024 * 1024) {
-            setError("image", {
-                type: "manual",
-                message: "Image size should be less than 5MB",
-            });
+            setValue("image", 'wrong-image');
             return;
         }
 
@@ -327,7 +323,7 @@ const page = () => {
 
 
                                             <div className='p-1 mt-3 lg:p-2 lg:mt-6 border-t border-gray-200'>
-                                                <span className='fs-14'>Testimonials :{item?.testimonials.length - 1} </span>
+                                                <span className='fs-14'>Testimonials :{item?.testimonials.length == 0 ? 0 : item?.testimonials.length - 1} </span>
                                             </div>
                                         </div>
 
