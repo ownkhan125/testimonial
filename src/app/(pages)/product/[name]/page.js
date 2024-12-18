@@ -229,7 +229,7 @@ const page = () => {
                                     <input
                                         id="search"
                                         name="search"
-                                        placeholder="Search testimonials by name, emailz, or keywords"
+                                        placeholder="Search testimonials by name, email, or keywords"
                                         type="search"
                                     // value={searchValue}
                                     // onChange={(e) => setSearchValue(e.target.value)} 

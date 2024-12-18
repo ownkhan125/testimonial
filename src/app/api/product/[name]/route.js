@@ -58,7 +58,7 @@ export const POST = async (req, context) => {
 
         // Parse request body
         const { data } = await req.json();
-
+        console.log('chekc data ', data);
         // Create a new Testimonial
         const userTestimonial = new Testimonial({
             name: data.name,

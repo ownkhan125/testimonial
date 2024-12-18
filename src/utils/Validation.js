@@ -28,6 +28,49 @@ export const spaceValidationSchema = yup.object().shape({
 });
 
 
+// user testimonial form 
+export const userTestimonial = yup.object().shape({
+    name: yup.string().max(15, 'Name must not exceed 15 characters.').required("Name is required."),
+    email: yup.string().required("Email is required."),
+    message: yup.string().min(10, 'must be at least 10 characters long').required("please enter your message"),
+    image: yup
+        .mixed()
+        .nullable()
+        .test(
+            "fileValidation",
+            "Only JPEG/PNG images under 5MB are allowed",
+            (value) => {
+                console.log('check value', value);
+                if (value.length > 0 && value instanceof FileList && value[0].size > 5 * 1024 * 1024) {
+                    return false;
+                }
+
+
+                return true;
+            }
+
+        ),
+
+        photo: yup
+        .mixed()
+        .nullable()
+        .test(
+            "fileValidation",
+            "Only JPEG/PNG images under 5MB are allowed",
+            (value) => {
+                if (value.length > 0 && value instanceof FileList && value[0].size > 5 * 1024 * 1024) {
+                    return false;
+                }
+
+                return true;
+            }
+
+        ),
+
+
+});
+
+
 
 
 

@@ -2,6 +2,8 @@
 
 
 import Loader from '@/components/Loader';
+import { useValidation } from '@/hooks/useValidation';
+import { userTestimonial } from '@/utils/Validation';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { RatingStar } from 'rating-star';
@@ -32,7 +34,7 @@ const page = () => {
 
 
 
-    const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useValidation(userTestimonial);
 
 
     // Rating funtion 
@@ -59,6 +61,7 @@ const page = () => {
     // handle photo  
     const handlePhoto = async (e) => {
         const file = e.target.files[0];
+        // setValue('photo', file);
 
         // Convert the file to base64
         const base64 = await new Promise((resolve) => {
@@ -91,18 +94,35 @@ const page = () => {
 
 
 
-    // sendData backend funtion
+    // sendData backend function
     const onSubmit = async (data) => {
         try {
+            console.log('check daata', data);
             setLoading(true);
-            if (data.image) {
+            if (image && image.length > 0) {
                 const imageUrl = await uploadImage(image);
-                data.image = imageUrl;
+                if (!imageUrl) {
+                    // If image is heavy or upload fails, stop execution
+                    setLoading(false);
+                    return;
+                } else {
+                    data.image = imageUrl;
+                }
+            } else {
+                data.image = '';
             }
 
-            if (data.photo) {
+            if (photo && photo.length > 0) {
                 const imageUrl = await uploadImage(photo);
-                data.photo = imageUrl;
+                if (!imageUrl) {
+                    // If image is heavy or upload fails, stop execution
+                    setLoading(false);
+                    return;
+                } else {
+                    data.photo = imageUrl;
+                }
+            } else {
+                data.photo = '';
             }
             data.rating = rating;
 
@@ -118,6 +138,7 @@ const page = () => {
             console.log('dashboard page:', error);
         } finally {
             setLoading(false);
+            alert('Send Your Testimonial');
         }
         reset();
         toggle()
@@ -216,20 +237,12 @@ const page = () => {
                         {/* Testimonial Text */}
                         <div>
                             <textarea
-                                {...register("message", {
-                                    required: "Message is required",
-                                    minLength: {
-                                        value: 10,
-                                        message: "Message must be at least 10 characters",
-                                    },
-                                })}
+                                {...register("message")}
                                 rows="5"
                                 placeholder="What did you dislike? How can we make it better?"
                                 className="shadow-sm border flex-1 form-input block w-full min-w-0 rounded-md text-gray-800 transition duration-150 ease-in-out sm:text-sm sm:leading-5 border-gray-300 p-2"
                             />
-                            {errors.message && (
-                                <span className="text-red-500 text-sm">{errors.message.message}</span>
-                            )}
+                            {errors.message && <p className="error-message">{errors.message.message}</p>}
                         </div>
 
                         {/* Attach Image */}
@@ -242,6 +255,7 @@ const page = () => {
                                     {...register("photo")}
                                     onChange={handlePhoto}
                                 />
+                                {errors.photo && <p className="error-message">{errors.photo.message}</p>}
                             </div>
                         </div>
 
@@ -254,9 +268,7 @@ const page = () => {
                                 {...register("name", { required: "Name is required" })}
                                 className="w-full border border-gray-300 text-gray-700 rounded-lg sm:text-sm sm:leading-5 p-2"
                             />
-                            {errors.name && (
-                                <span className="text-red-500 text-sm">{errors.name.message}</span>
-                            )}
+                            {errors.name && <p className="error-message">{errors.name.message}</p>}
                         </div>
 
                         {/* Email */}
@@ -269,9 +281,7 @@ const page = () => {
                                 {...register("email", { required: "Email is required" })}
                                 className="w-full border border-gray-300 text-gray-700 rounded-lg sm:text-sm sm:leading-5 p-2"
                             />
-                            {errors.email && (
-                                <span className="text-red-500 text-sm">{errors.email.message}</span>
-                            )}
+                            {errors.email && <p className="error-message">{errors.email.message}</p>}
                         </div>
 
                         {/* Upload Photo */}
@@ -288,6 +298,7 @@ const page = () => {
                                 </div>
                                 <label>
                                     <input type="file" accept="image/*" {...register("image")} onChange={handleImage} />
+                                    {errors.image && <p className="error-message">{errors.image.message}</p>}
                                 </label>
                             </div>
                         </div>

@@ -18,8 +18,6 @@ const Navbar = () => {
 
 
 
-
-
     return (
         <>
             <section className='bg-white'>
@@ -37,6 +35,7 @@ const Navbar = () => {
                                     />
                                 </Link>
                             </div>
+
 
 
                             <div className={`flex gap-x-3 items-center ${session ? '' : 'hidden'}`}>
@@ -59,21 +58,23 @@ const Navbar = () => {
                             </div>
 
 
+                            {
+                                status === 'loading' ? '' :
 
-                            <div className={`flex gap-x-3 items-center ${session ? 'hidden' : ''}`}>
-                                <div className='hidden md:block'>
-                                    <Link className='btn-transparent fit-content' href={'/api/auth/signin'}>
-                                        Sign In
-                                    </Link>
-                                </div>
+                                    <div className={`flex gap-x-3 items-center ${session ? 'hidden' : ''}`}>
+                                        <div className='hidden md:block'>
+                                            <Link className='btn-transparent fit-content' href={'/api/auth/signin'}>
+                                                Sign In
+                                            </Link>
+                                        </div>
 
-                                <div className='hidden md:block'>
-                                    <Link className='btn fit-content' href={'/signup'}>
-                                        Sign Up
-                                    </Link>
-                                </div>
-                            </div>
-
+                                        <div className='hidden md:block'>
+                                            <Link className='btn fit-content' href={'/signup'}>
+                                                Sign Up
+                                            </Link>
+                                        </div>
+                                    </div>
+                            }
 
                         </div>
                     </div>

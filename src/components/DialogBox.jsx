@@ -26,22 +26,18 @@ const DialogBox = () => {
         const file = e.target.files[0];
         const localUrl = URL.createObjectURL(file);
         setImage(localUrl)
-
         if (file.size > 5 * 1024 * 1024) {
-            setError("image", {
-                type: "manual",
-                message: "Image size should be less than 5MB",
-            });
+            setValue("image", 'wrong-image');
             return;
         }
 
+        // Convert the file to base64
         const base64 = await new Promise((resolve) => {
             const reader = new FileReader();
             reader.onload = () => resolve(reader.result);
             reader.readAsDataURL(file);
         });
-        // setImage(base64);
-        setValue("image", base64);
+        setValue('image', base64)
     };
 
 
@@ -185,7 +181,7 @@ const DialogBox = () => {
                                         {...register("name")}
                                         onChange={(e) => setValue("name", e.target.value)} // Update form state on change
                                     />
-                                    {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+                                    {errors.name && <p className="error-message">{errors.name.message}</p>}
                                 </div>
 
                                 {/* Public URL */}
@@ -214,6 +210,7 @@ const DialogBox = () => {
                                         />
                                         <span>Change</span>
                                     </label>
+                                    {errors.image && <p className="error-message">{errors.image.message}</p>}
                                 </div>
 
                                 {/* Header Title */}
@@ -226,7 +223,7 @@ const DialogBox = () => {
                                         placeholder="Enter header title..."
                                         {...register("header")}
                                     />
-                                    {errors.header && <p className="text-red-500">{errors.header.message}</p>}
+                                    {errors.header && <p className="error-message">{errors.header.message}</p>}
                                 </div>
 
                                 {/* Message */}
