@@ -51,7 +51,8 @@ export const userTestimonial = yup.object().shape({
 
         ),
 
-        photo: yup
+
+    photo: yup
         .mixed()
         .nullable()
         .test(

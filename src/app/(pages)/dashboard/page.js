@@ -13,7 +13,7 @@ import { IoMdClose } from "react-icons/io";
 
 const page = () => {
 
-    const { register, handleSubmit, setValue, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
+    const { register, handleSubmit, setValue, setError, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
@@ -34,6 +34,17 @@ const page = () => {
         if (file.size > 5 * 1024 * 1024) {
             setValue("image", 'wrong-image');
             return;
+        }
+
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            e.target.value = null;
+            setError('image', {
+                type: "manual",
+                message: "jpeg, png are allowed",
+            })
+            setImage(null);
+            return null;
         }
 
         // Convert the file to base64
@@ -87,7 +98,7 @@ const page = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                },  
+                },
                 body: JSON.stringify({ data })
             })
             // if (res.ok) {
@@ -227,7 +238,7 @@ const page = () => {
                                                     <label htmlFor="image-input" className="btn fit-content">
                                                         <input
                                                             type="file"
-                                                            accept="image/*"
+                                                            accept=".jpeg, .jpg, .png"
                                                             {...register('image')}
                                                             style={{ display: 'none' }}
                                                             onChange={handleUpload}

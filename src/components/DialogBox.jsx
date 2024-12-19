@@ -10,7 +10,7 @@ import { spaceValidationSchema } from '@/utils/Validation';
 
 
 const DialogBox = () => {
-    const { register, handleSubmit, reset, watch, setValue, formState: { errors } } = useValidation(spaceValidationSchema);
+    const { register, handleSubmit, reset, watch, setError, setValue, formState: { errors } } = useValidation(spaceValidationSchema);
     const params = useParams();
     const router = useRouter();
     const slugName = params?.name;
@@ -29,6 +29,17 @@ const DialogBox = () => {
         if (file.size > 5 * 1024 * 1024) {
             setValue("image", 'wrong-image');
             return;
+        }
+
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            e.target.value = null;
+            setError('image', {
+                type: "manual",
+                message: "jpeg, png are allowed",
+            })
+            setImage(null);
+            return null;
         }
 
         // Convert the file to base64

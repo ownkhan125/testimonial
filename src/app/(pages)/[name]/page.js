@@ -34,7 +34,7 @@ const page = () => {
 
 
 
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useValidation(userTestimonial);
+    const { register, handleSubmit, reset, setError, formState: { errors } } = useValidation(userTestimonial);
 
 
     // Rating funtion 
@@ -46,8 +46,18 @@ const page = () => {
     // handle image  
 
     const handleImage = async (e) => {
-        const file = e.target.files[0];
+        let file = e.target.files[0];
 
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            e.target.value = null;
+            setError('image', {
+                type: "manual",
+                message: "jpeg, png are allowed",
+            })
+            setImage(null);
+            return null;
+        }
         // Convert the file to base64
         const base64 = await new Promise((resolve) => {
             const reader = new FileReader();
@@ -63,6 +73,16 @@ const page = () => {
         const file = e.target.files[0];
         // setValue('photo', file);
 
+        const allowedTypes = ['image/jpeg', 'image/png'];
+        if (!allowedTypes.includes(file.type)) {
+            e.target.value = null;
+            setError('photo', {
+                type: "manual",
+                message: "jpeg, png are allowed",
+            })
+            setPhoto(null);
+            return null;
+        }
         // Convert the file to base64
         const base64 = await new Promise((resolve) => {
             const reader = new FileReader();
@@ -251,7 +271,7 @@ const page = () => {
                             <div className="my-2">
                                 <input
                                     type="file"
-                                    accept="image/*"
+                                    accept=".jpeg, .jpg, .png"
                                     {...register("photo")}
                                     onChange={handlePhoto}
                                 />
@@ -297,7 +317,7 @@ const page = () => {
                                     />
                                 </div>
                                 <label>
-                                    <input type="file" accept="image/*" {...register("image")} onChange={handleImage} />
+                                    <input type="file" accept=".jpeg, .jpg, .png" {...register("image")} onChange={handleImage} />
                                     {errors.image && <p className="error-message">{errors.image.message}</p>}
                                 </label>
                             </div>
