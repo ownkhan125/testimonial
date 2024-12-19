@@ -29,6 +29,7 @@ fill property background set
 nodemailer send email code 
 
  // node mailer work , send email
+
                 await sendVerificationEmail(user.email, "own khan", "verify",
                     `<div className="font-sans text-gray-800 max-w-lg mx-auto p-5 border border-gray-300 rounded-lg">
             <table role="presentation" className="w-full border-spacing-0">
@@ -63,3 +64,40 @@ nodemailer send email code
         </tr>
        </table>
                     </div>`);
+
+
+
+
+
+
+site ko fast or optimize krne ke points
+
+Static Site Generation (SSG):
+Use getStaticProps aur getStaticPaths jahan possible ho. Dynamic routes ke liye bhi static generation karna.
+
+Incremental Static Regeneration (ISR):
+ISR use karo jahan data baar baar change ho raha ho, taake pages background me regenerate hoon (revalidate option).
+
+Server-Side Rendering (SSR) ko Limit karo:
+Sirf wahi pages SSR karo jo real-time data ke liye zaroori hain, baaki sab static ya client-side handle karo.
+
+Image Optimization:
+Next.js ki next/image component use karo, jo lazy loading aur responsive images automatically optimize karta hai.
+
+Code Splitting:
+Import libraries dynamically (dynamic import) jahan zarurat ho aur heavy components ko lazy load karo.
+
+Caching:
+CDN-level caching aur APIs ke response ko cache karo. Headers me Cache-Control set karna na bhoolo.
+
+Database Optimization:
+Query ko optimize karo, indexes use karo, aur frequently accessed data ke liye caching (e.g., Redis) use karo.
+
+Bundle Analyzer:
+@next/bundle-analyzer package se analyze karo ke kaunsa code bundle size barha raha hai aur usko optimize karo.
+
+Static Assets Optimization:
+Fonts, CSS, aur JavaScript ka size minimize karo. Static assets gzip ya Brotli compression ke saath serve karo.
+
+Prefetching:
+Next.js ka built-in link prefetching use karo (<Link> component automatically karta hai).
