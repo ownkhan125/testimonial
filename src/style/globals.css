@@ -129,7 +129,7 @@ p {
 
 .fs-18 {
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: #25282c;
 }
 
@@ -160,6 +160,7 @@ p {
   width: fit-content;
   max-width: 100%;
   height: auto;
+  max-height: 300px;
   overflow: hidden;
   border-radius: 8px;
 }

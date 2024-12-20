@@ -98,7 +98,6 @@ export const PUT = async (req, context) => {
         await connectDB();
 
         const { data } = await req.json();
-        console.log('checkjec', data);
         if (!data) {
             return NextResponse.json('user unAuthorized', { status: 401 })
         };
@@ -117,12 +116,17 @@ export const PUT = async (req, context) => {
             return NextResponse.json('not found product', { status: 404 })
         }
 
+        const existingSpacename = await Product.findOne({name: data.name})
+        if(existingSpacename){
+            return NextResponse.json('Product already exist', { status: 400 })
+        }
+
         const updateProduct = await Object.assign(existingProduct, data);
         await updateProduct.save();
 
         return NextResponse.json(updateProduct, { status: 200 })
     } catch (error) {
-        console.log('product PUT::', error?.message);
+        console.log('product [dynamic] PUT::', error?.message);
         return NextResponse.json(error.message, { status: 500 })
     }
 }

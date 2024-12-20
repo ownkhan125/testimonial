@@ -99,8 +99,9 @@ const DialogBox = () => {
             if (res.ok) {
                 const response = await res.json();
                 router.push(`${response.name}`)
-            } else {
-                alert('your new data is not secure')
+            }
+            else if (res.status == 400) {
+                alert('Change Space Name, URL is not Available')
             }
 
 

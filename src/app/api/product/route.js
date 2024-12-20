@@ -34,7 +34,6 @@ export const POST = async (req) => {
         await connectDB();
 
         const { data } = await req.json();
-        console.log('check data image', data);
         if (!data) {
             return NextResponse.json('user unAuthorized', { status: 401 })
         };
@@ -49,7 +48,7 @@ export const POST = async (req) => {
             return NextResponse.json('user not found', { status: 404 })
         }
 
-        const existingProduct = await Product.findOne({ name: data?.name, author: user._id });
+        const existingProduct = await Product.findOne({ name: data?.name });
         if (existingProduct) {
             return NextResponse.json('Product already exist', { status: 400 })
         }
@@ -79,8 +78,6 @@ export const DELETE = async (req) => {
 
         // Extract testimonial ID from the request body
         const { id } = await req.json();
-
-        console.log('Deleting Testimonial ID:', id);
 
         // Step 1: Delete the testimonial from the testimonials collection
         const deletedTestimonial = await Testimonial.findByIdAndDelete(id);

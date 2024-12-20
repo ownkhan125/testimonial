@@ -101,9 +101,9 @@ const page = () => {
                 },
                 body: JSON.stringify({ data })
             })
-            // if (res.ok) {
-            //     fetchPosts()
-            // }
+            if (res.status == 400) {
+                alert('Change Space Name, URL is not Available');
+            }
         } catch (error) {
             console.log('dashboard page:', error);
         } finally {
@@ -334,7 +334,7 @@ const page = () => {
 
 
                                             <div className='p-1 mt-3 lg:p-2 lg:mt-6 border-t border-gray-200'>
-                                                <span className='fs-14'>Testimonials :{item?.testimonials.length == 0 ? 0 : item?.testimonials.length - 1} </span>
+                                                <span className='fs-14'>Testimonials :{item?.testimonials.length == 0 ? 0 : item?.testimonials.length} </span>
                                             </div>
                                         </div>
 
