@@ -1,21 +1,25 @@
 'use client';
 
 
-import Deletemodal from '@/components/Deletemodal';
+
+
 import DialogBox from '@/components/DialogBox';
 import Loader from '@/components/Loader';
+import PageLoader from '@/components/PageLoader';
+import { useQuery } from '@tanstack/react-query';
 import moment from 'moment';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { RatingStar } from 'rating-star';
-import React, { useEffect, useState } from 'react'
+import React, {  useState } from 'react'
 import { MdDeleteOutline } from 'react-icons/md';
+import { fetchSpecificProduct } from '@/services/dynamicProductApi';
+import { fetchProductTestimonial } from '@/services/dynamicTestimonialApi';
 
 const page = () => {
     const params = useParams();
     const name = params?.name;
-    const [product, setProduct] = useState();
-    const [Testimonial, setTestimonial] = useState();
+    // const [Testimonial, setTestimonial] = useState();
     const [isOpen, setIsOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(null);
     const [check, setCheck] = useState('');
@@ -94,40 +98,44 @@ const page = () => {
 
 
 
-    useEffect(() => {
-        const fetchProduct = async () => {
-            try {
-                const res = await fetch(`/api/product/${name}`);
-                const response = await res.json();
-                setProduct(response);
-            } catch (error) {
-                console.log(error);
-            }
-        };
 
-        const fetchTestimonial = async () => {
-            try {
-                const res = await fetch(`/api/testimonials/${name}`);
-                const response = await res.json();
-                setTestimonial(response.testimonials);
-            } catch (error) {
-                console.log(error);
-            }
-        };
 
-        fetchProduct();
-        fetchTestimonial()
-    }, [name, check]);
+
+    const { data: SpecificProduct, isLoading, isError} = useQuery({
+        queryKey: ['Product', name],
+        queryFn: () => fetchSpecificProduct(name),
+        enabled: !!name,
+        staleTime: 10 * 60 * 1000,
+    });
+
+    const { data: Testimonial, isLoading: LoadingTestimonial, isError: ErrorTestimonial } = useQuery({
+        queryKey: ['Testimonial', name],
+        queryFn: () => fetchProductTestimonial(name),
+        enabled: !!name,
+        staleTime: 10 * 60 * 1000,
+        
+    });
 
 
 
 
 
+    if (isLoading) {
+        return <PageLoader />
+    }
+
+    if (isError) {
+        return (
+            <>
+                <h3>Error...</h3>
+            </>
+        );
+    }
+
+    // console.log('check section sata', data);
 
     return (
         <>
-
-
             <DialogBox />
             <div className='product-hero-section'>
                 <div className='container-1'>
@@ -135,14 +143,14 @@ const page = () => {
                         <div className='flex gap-x-3 items-center'>
                             <div className='square-md'>
                                 <Image
-                                    src={product?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                    src={SpecificProduct?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
                                     alt='product'
                                     fill
                                     priority
                                 />
                             </div>
                             <div>
-                                <h1>{product?.name}</h1>
+                                <h1>{SpecificProduct?.name}</h1>
                             </div>
                         </div>
 

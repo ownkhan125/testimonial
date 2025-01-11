@@ -1,9 +1,13 @@
 'use client'
 
 
+import { fetchProduct, sendProduct } from '@/services/productApi';
+import { uploadConvertImage } from '@/services/cloudinaryUrl';
 import Loader from '@/components/Loader';
+import PageLoader from '@/components/PageLoader';
 import { useValidation } from '@/hooks/useValidation';
 import { spaceValidationSchema } from '@/utils/Validation';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,7 +18,6 @@ import { IoMdClose } from "react-icons/io";
 const page = () => {
 
     const { register, handleSubmit, setValue, setError, reset, watch, formState: { errors } } = useValidation(spaceValidationSchema);
-    const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
     const { data: session } = useSession();
@@ -25,7 +28,9 @@ const page = () => {
     const formattedName = name?.replace(/ /g, '-');
     const [publicUrl, setPublicUrl] = useState();
     const [searchTerm, setSearchTerm] = useState('');
-    const [filteredItems, setFilteredItems] = useState(product);
+    const [filteredItems, setFilteredItems] = useState([]);
+
+    const queryClient = useQueryClient();
 
     const handleUpload = async (e) => {
         const file = e.target.files[0];
@@ -56,96 +61,95 @@ const page = () => {
         setValue('image', base64)
     };
 
-    const uploadImage = async (img) => {
-        try {
-            const response = await fetch("/api/upload", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ image: img }),
-            });
 
-            if (response.ok) {
-                const data = await response.json();
-                return data;
-            } else {
-                alert('something wrong Image')
-            }
-        } catch (error) {
-            console.log('uploadImage::', error?.message);
+
+
+
+
+
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ['product'],
+        queryFn: fetchProduct,
+        staleTime: 10 * 60 * 1000,
+    })
+
+    const { mutate } = useMutation({
+        mutationFn: sendProduct,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['product'])
         }
-
-    };
+    })
 
 
     const onSubmit = async (data) => {
-        try {
-            setLoading(true);
-            if (data.image && data.image.length > 0) {
-                const imageUrl = await uploadImage(data.image);
-                if (!imageUrl) {
-                    // If image is heavy or upload fails, stop execution
-                    setLoading(false);
-                    return;
-                } else {
-                    data.image = imageUrl;
-                }
-            } else {
-                data.image = '';
+        setLoading(true);
+
+        // Handle image upload if present
+        if (data.image?.length > 0) {
+            const imageUrl = await uploadConvertImage(data.image);
+            if (!imageUrl) {
+                setLoading(false); // Stop if image upload fails
+                return;
             }
-            const res = await fetch('/api/product', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ data })
-            })
-            if (res.status == 400) {
-                alert('Change Space Name, URL is not Available');
-            }
-        } catch (error) {
-            console.log('dashboard page:', error);
-        } finally {
-            setLoading(false);
+            data.image = imageUrl;
+        } else {
+            data.image = ''; // Set empty image if not provided
         }
+        console.log('check data::::', data);
+        // Trigger mutation
+        mutate(data);
+
+        // UI cleanup
         reset();
-        document.querySelector('.space-Modal').close()
-        document.body.classList.remove('modal-open')
-        setImage(null)
+        closeModal();
+        setImage(null);
+        setLoading(false);
+    };
+
+    // Helper function for UI cleanup
+    const closeModal = () => {
+        document.querySelector('.space-Modal')?.close();
+        document.body.classList.remove('modal-open');
     };
 
 
-
-
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await fetch(`http://localhost:3000/api/product`);
-                const data = await response.json();
-                setProduct(data);
-            } catch (error) {
-                console.error('Error fetching posts:', error);
-            }
-        };
-
         setPublicUrl(`${window.location.host}/${formattedName}`);
-        fetchPosts();
     }, [formattedName]);
 
     // filter input 
     useEffect(() => {
         if (searchTerm === '') {
             // If search term is empty, show all items
-            setFilteredItems(product);
+            setFilteredItems(data);
         } else {
             // Filter items based on search term (case insensitive)
-            const filtered = product.filter(item =>
+            const filtered = data.filter(item =>
                 item.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredItems(filtered);
         }
-    }, [searchTerm, product]);
+    }, [searchTerm, data]);
+
+
+
+    if (isLoading) {
+        return (
+            <>
+                <div>
+                    <PageLoader />
+                </div>
+            </>
+        );
+    }
+
+    if (isError) {
+        return (
+            <>
+                <h3>Error...</h3>
+            </>
+        );
+    }
 
     return (
         <>
@@ -302,47 +306,47 @@ const page = () => {
                             </div>
 
 
+                            {
+                                isLoading ? <PageLoader />
+                                    : <div className='grid sm:grid-cols-2 lg:grid-cols-3 grid-flow-row gap-5  my-4'>
 
-                            <div className='grid sm:grid-cols-2 lg:grid-cols-3 grid-flow-row gap-5  my-4'>
-                                {
-                                    session &&
-                                    filteredItems?.map((item, index) => (
-                                        <div key={index} className='space-card'>
-                                            <div className='flex items-center justify-between'>
-                                                <Link href={`/product/${item.name.replace(/ /g, '-')}`} className='flex items-center gap-x-2'>
-                                                    <div className="avatar">
-                                                        <Image
-                                                            src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
-                                                            alt="simple"
-                                                            fill
-                                                            sizes='100%'
-                                                            priority
-                                                        />
+                                        {
+                                            session &&
+                                            filteredItems?.map((item, index) => (
+                                                <div key={index} className='space-card'>
+                                                    <div className='flex items-center justify-between'>
+                                                        <Link href={`/product/${item.name.replace(/ /g, '-')}`} className='flex items-center gap-x-2'>
+                                                            <div className="avatar">
+                                                                <Image
+                                                                    src={item?.image || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"}
+                                                                    alt="simple"
+                                                                    fill
+                                                                    sizes='100%'
+                                                                    priority
+                                                                />
+                                                            </div>
+
+                                                            <span className='line-clamp-1'>
+                                                                {item.name}
+                                                            </span>
+                                                        </Link>
+
+                                                        <div>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
+                                                            </svg>
+                                                        </div>
                                                     </div>
 
-                                                    <span className='line-clamp-1'>
-                                                        {item.name}
-                                                    </span>
-                                                </Link>
 
-                                                <div>
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true" className="h-5 w-5">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"></path>
-                                                    </svg>
+                                                    <div className='p-1 mt-3 lg:p-2 lg:mt-6 border-t border-gray-200'>
+                                                        <span className='fs-14'>Testimonials :{item?.testimonials.length == 0 ? 0 : item?.testimonials.length} </span>
+                                                    </div>
                                                 </div>
-                                            </div>
-
-
-                                            <div className='p-1 mt-3 lg:p-2 lg:mt-6 border-t border-gray-200'>
-                                                <span className='fs-14'>Testimonials :{item?.testimonials.length == 0 ? 0 : item?.testimonials.length} </span>
-                                            </div>
-                                        </div>
-
-                                    ))
-                                }
-
-
-                            </div>
+                                            ))
+                                        }
+                                    </div>
+                            }
                         </div>
                     </div>
                 </div>

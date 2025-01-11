@@ -24,7 +24,7 @@ export const GET = async (req, context) => {
 
         // Find product by name
         const result = await Product.findOne({ name: formattedProduct }).populate({
-            path: 'testimonials', 
+            path: 'testimonials',
         });
 
         if (!result) {

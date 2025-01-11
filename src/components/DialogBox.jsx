@@ -53,33 +53,13 @@ const DialogBox = () => {
 
 
 
-    const uploadImage = async (img) => {
-        try {
-            const response = await fetch("/api/upload", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ image: img }),
-            });
-            if (response.ok) {
-                const data = await response.json();
-                return data;
-            } else {
-                alert('something wrong Image')
-            }
 
-        } catch (error) {
-            console.log('check function error');
-            console.log('uploadImage::', error?.message);
-        }
-    };
 
     const onSubmit = async (data) => {
         try {
             setLoading(true);
             if (data.image && data.image.length > 0) {
-                const imageUrl = await uploadImage(data.image);
+                const imageUrl = await uploadConvertImage(data.image);
                 if (!imageUrl) {
                     // If image is heavy or upload fails, stop execution
                     setLoading(false);
