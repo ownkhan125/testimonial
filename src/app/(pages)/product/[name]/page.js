@@ -11,7 +11,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { RatingStar } from 'rating-star';
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import { MdDeleteOutline } from 'react-icons/md';
 import { fetchSpecificProduct } from '@/services/dynamicProductApi';
 import { fetchProductTestimonial } from '@/services/dynamicTestimonialApi';
@@ -101,7 +101,7 @@ const page = () => {
 
 
 
-    const { data: SpecificProduct, isLoading, isError} = useQuery({
+    const { data: SpecificProduct, isLoading, isError } = useQuery({
         queryKey: ['Product', name],
         queryFn: () => fetchSpecificProduct(name),
         enabled: !!name,
@@ -113,7 +113,7 @@ const page = () => {
         queryFn: () => fetchProductTestimonial(name),
         enabled: !!name,
         staleTime: 10 * 60 * 1000,
-        
+
     });
 
 
