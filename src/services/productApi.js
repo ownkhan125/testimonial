@@ -2,7 +2,7 @@ const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 export const fetchProduct = async () => {
     try {
-        const response = await fetch(`${baseUrl}/api/product`);
+        const response = await fetch(`/api/product`);
         const data = await response.json();
         return data;
     } catch (error) {
@@ -13,7 +13,7 @@ export const fetchProduct = async () => {
 
 export const sendProduct = async (data) => {
     try {
-        const res = await fetch(`${baseUrl}/api/product`, {
+        const res = await fetch(`/api/product`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
