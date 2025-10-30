@@ -1,9 +1,9 @@
-
+const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 
 export const fetchSpecificProduct = async (name) => {
     try {
-        const res = await fetch(`http://localhost:3000/api/product/${name}`);
+        const res = await fetch(`${baseUrl}/api/product/${name}`);
         const response = await res.json();
         return response;
     } catch (error) {
